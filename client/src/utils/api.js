@@ -1,0 +1,29 @@
+import {
+    _getUsers,
+    _getQuestions,
+    _saveQuestion,
+    _saveQuestionAnswer,
+    _createUser
+} from './_DATA.js';
+
+export const getInitialData = () => {
+    return Promise.all([
+        _getUsers(),
+        _getQuestions(),
+    ]).then(([users, questions]) => ({
+        users,
+        questions,
+    }));
+}
+
+export const saveQuestion = (question) => {
+    return _saveQuestion(question)
+}
+
+export const saveQuestionAnswer = (info) => {
+    return _saveQuestionAnswer(info)
+}
+
+export const createUserDB = (user) => {
+    return _createUser(user)
+}

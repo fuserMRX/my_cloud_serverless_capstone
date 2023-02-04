@@ -1,0 +1,264 @@
+@import url(https://fonts.googleapis.com/css?family=Aclonica);
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+img {
+  border-radius: 50%;
+}
+
+.options {
+  list-style-type: none;
+}
+
+.nav ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  text-decoration: none;
+  align-items: center;
+}
+
+.nav li:first-child {
+  padding-left: 0;
+}
+
+.nav li a {
+  color: rgb(10, 10, 10);
+  text-decoration: none;
+  display: block;
+  padding: 5px;
+}
+
+.nav li a:hover,
+.activeTab {
+  background-color: rgb(169, 240, 169);
+  background-size: auto;
+  border-radius: 50%;
+}
+
+.nav .logoutLink {
+  border-radius: 50%;
+  color: unset;
+}
+
+nav .logoutLink:hover {
+  background-color: rgb(169, 240, 169);
+}
+
+ul {
+  padding-left: 0;
+}
+
+li {
+  list-style-type: none;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.loginName {
+  font-family: "Aclonica";
+}
+
+.questions {
+  border-style: solid;
+  border-color: #d8dce3;
+}
+
+.nav {
+  justify-content: center;
+}
+
+.nav-tabs .nav-item.nav-link {
+  color: black;
+  flex-grow: 1;
+}
+
+.nav-tabs .nav-item.nav-link.active {
+  background-color: #d8dce3;
+  color: green;
+}
+
+.tab-content .tab-pane.active {
+  display: flex;
+  justify-content: center;
+}
+
+.tab-content .card {
+  flex-direction: unset;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 0 1px #b6bac2;
+}
+
+.tab-content .card .card-img {
+  height: 80px;
+  width: unset;
+  margin-left: 20px;
+  border-radius: 50%;
+}
+
+.circle {
+  background-color: #d0fac0;
+}
+
+.quesitonPoll,
+.resultsPoll,
+.questionCreater {
+  display: flex;
+  justify-content: center;
+}
+
+.quesitonPoll .card {
+  flex-direction: row;
+  align-items: center;
+  box-shadow: inset 0 0 0 1px #b6bac2;
+}
+
+.questionPollImg {
+  height: 80px;
+  width: unset;
+  margin-left: 20px;
+  border-radius: 50%;
+}
+
+.quesitonPoll .card-title {
+  margin-left: 75px;
+}
+
+.quesitonPoll .btn {
+  margin-left: 12px;
+}
+
+.questionPollBorder {
+  border-left: 1px solid #b6bac2;
+}
+
+.resultPollBorder {
+  border-left: 1px solid #b6bac2;
+  position: relative;
+}
+
+.resultPollBorderWithoutVote {
+  box-shadow: inset 0 0 0 1px #b6bac2;
+}
+
+.questionResultImg {
+  height: 80px;
+  margin-left: 20px;
+  border-radius: 50%;
+}
+
+.resultImageBlock {
+  display: flex;
+  align-items: center;
+}
+
+.votedBadge {
+  position: absolute;
+  bottom: 80%;
+  left: 90%;
+}
+
+.leaderBoardAll {
+  width: 40rem;
+  margin-left: 20%;
+}
+
+.leaderBoardAll .card {
+  justify-content: center
+}
+
+.leaderBoardItemContainer {
+  align-self: center;
+}
+
+.leaderBoardItemContainer.triangle-topleft {
+  width: 0;
+  height: 0;
+  border-top: 40px solid #b6bac2;
+  border-right: 40px solid transparent;
+  position: absolute;
+  left: 0;
+  bottom: 75%;
+}
+
+.leaderBoardItemContainer.triangle-topleft-image-gold {
+  position: absolute;
+  height: 12%;
+  width: 12%;
+  left: 0;
+  bottom: 86%;
+  background-image: url(/assets/images/challengeCup.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 1;
+}
+
+.leaderBoardItemContainer.triangle-topleft-image-silver {
+  position: absolute;
+  height: 12%;
+  width: 12%;
+  left: 0;
+  bottom: 86%;
+  background-image: url(/assets/images/challengeCup_silver.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 1;
+}
+
+.leaderBoardItemContainer.triangle-topleft-image-bronze {
+  position: absolute;
+  height: 12%;
+  width: 12%;
+  left: 0;
+  bottom: 86%;
+  background-image: url(/assets/images/challengeCup_bronze.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 1;
+}
+
+.leaderBoardItemContainer.leaderMiddle {
+  border-left: 1px solid #b6bac2;
+  border-right: 1px solid #b6bac2;
+}
+
+.leaderBoardImg {
+  height: 80px;
+  border-radius: 50%;
+}
+
+.userLogo {
+  display: flex;
+  align-items: center;
+}
+
+.userLogo .userName {
+  display: contents;
+}
+
+.userLogoImage {
+  margin-left: 10px;
+}
+
+.loginButtonSection {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.loginButtons {
+  display: flex;
+  flex-direction: column;
+}
