@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-// Local import
-import { handleCreateUser } from '../actions/users';
-
 class CreateUserForm extends Component {
     state = {
         toHome: false,
@@ -21,9 +18,7 @@ class CreateUserForm extends Component {
         }));
     };
 
-    handleSubmit = async (e) => {
-        const { dispatch } = this.props;
-
+    handleSubmit = (e) => {
         // Validation Check
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
@@ -44,12 +39,7 @@ class CreateUserForm extends Component {
             userId: userId
         };
 
-        // TODO - refactor the logic with the user creation in order sync it with Auth0!!!
-        // Create user in DB action
-        dispatch(handleCreateUser(user))
-            .catch(e => {
-                console.log(e);
-            });
+        sessionStorage.setItem('user', JSON.stringify(user));
 
         this.props.auth.login();
     }

@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import LoggedInUserNav from './LoggedInUserNav';
 import Logout from './Logout';
 
-const Navigation = () => {
+const Navigation = (props) => {
     const home = 'Home';
     const newQuestion = 'New Question';
     const leaderboard = 'LeaderBoard';
@@ -31,7 +31,7 @@ const Navigation = () => {
                     <LoggedInUserNav />
                 </li>
                 <li>
-                    <Logout />
+                    <Logout auth={props.auth}/>
                 </li>
             </ul>
         </nav>

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
 import './index.css';
 import App from './App';
@@ -18,7 +18,7 @@ const history = createBrowserHistory();
 
 const auth = new Auth(history);
 
-const handleAuthentication = async (props) => {
+const handleAuthentication = (props) => {
     const { location } = props;
     if (/access_token|id_token|error/.test(location.hash)) {
         const result = auth.handleAuthentication();

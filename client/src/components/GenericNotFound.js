@@ -17,7 +17,6 @@ class GenericNotFound extends Component {
     }
 
     render() {
-        console.log('GENERIC NOT FOUND LOCATION!!!!!!!! ======>', JSON.stringify(this.props.location));
         return (
             <div>
                 <div className="text-center">

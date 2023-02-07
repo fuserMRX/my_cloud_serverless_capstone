@@ -16,6 +16,7 @@ const Logout = (props) => {
         const { dispatch } = props;
 
         history.push('/');
+        props.auth.logout();
         dispatch(removeAuthedUser());
     };
 

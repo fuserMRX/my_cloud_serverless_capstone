@@ -14,12 +14,9 @@ import Navigation from './components/Nav';
 import GenericNotFound from './components/GenericNotFound';
 import Callback from './components/Callback';
 import { handleInitialData } from './actions/shared';
+import { handleCreateUser } from './actions/users';
 
 class App extends React.Component {
-    state = {
-        isAuthenticated: false,
-    }
-
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch(handleInitialData());
@@ -31,16 +28,20 @@ class App extends React.Component {
         window.removeEventListener('isAuthenticatedUpdate', this.handleAuthenticationUpdate);
     }
 
-    handleAuthenticationUpdate = (ev) => {
-        this.setState(() => ({
-            isAuthenticated: ev.detail.isAuthenticated,
-        }));
-        // TODO - add user creation logic!!!!
-        // // Create user in DB action
-        // dispatch(handleCreateUser(user))
-        //     .catch(e => {
-        //         console.log(e);
-        //     });
+    handleAuthenticationUpdate = async (ev) => {
+        const { dispatch } = this.props;
+
+        let user = null;
+
+        try {
+            user = JSON.parse(sessionStorage.getItem('user'));
+        } catch (e) {
+            console.log(e);
+        }
+
+        if (ev.detail.isAuthenticated && user) {
+            await dispatch(handleCreateUser(user));
+        }
     }
 
     render() {
@@ -48,11 +49,11 @@ class App extends React.Component {
             <>
                 <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
                 <div className='container'>
-                    {this.state.isAuthenticated ?
+                    {(this.props.enableLogin && this.props.auth.isAuthenticated()) ?
                         <>
-                            {this.props.enableNavBar && <Navigation />}
+                            {this.props.enableNavBar && <Navigation auth={this.props.auth}/>}
                             <Switch>
-                                <Route path='/' component={Home} />
+                                <Route path='/' exact component={Home} />
                                 <Route path='/questions/:question_id' exact component={QuestionPollWrapper} />
                                 <Route path='/add' exact component={QuestionCreaterForm} />
                                 <Route path='/leaderboard' exact component={LeaderBoard} />
@@ -78,11 +79,10 @@ class App extends React.Component {
     }
 }
 
-const mapeStateToProps = ({ authedUser, navbar, isAuth0Authenticated }) => {
+const mapeStateToProps = ({ authedUser, navbar }) => {
     return {
         enableLogin: authedUser !== null,
         enableNavBar: navbar,
-        isAuth0Authenticated
     };
 };
 

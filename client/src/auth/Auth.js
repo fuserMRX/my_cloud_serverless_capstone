@@ -12,7 +12,6 @@ export default class Auth {
 
     constructor(history) {
         this.history = history;
-
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
         this.handleAuthentication = this.handleAuthentication.bind(this);
@@ -26,7 +25,7 @@ export default class Auth {
         this.auth0.authorize();
     }
 
-    handleAuthentication() {
+    handleAuthentication = () => {
         const authenticationEvent = new CustomEvent('isAuthenticatedUpdate', {
             detail: {
                 isAuthenticated: true,
@@ -114,9 +113,10 @@ export default class Auth {
         // Remove isLoggedIn flag from localStorage
         localStorage.removeItem('isLoggedIn');
 
-        this.auth0.logout({
-            return_to: window.location.origin
-        });
+        sessionStorage.removeItem('user');
+
+        // Allowed logout URL should be configured on https://manage.auth0.com/!!!! for a correct redirect
+        this.auth0.logout();
 
         // navigate to the home route
         this.history.replace({ pathname: '/', state: {} });
