@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { v4 as uuidv4 } from 'uuid';
 
 class CreateUserForm extends Component {
     state = {
@@ -33,21 +34,20 @@ class CreateUserForm extends Component {
         e.preventDefault();
 
         // make user Id no more than 10 symols without spaces
-        const userId = this.state.userName.replace(/\s/g, '').toLowerCase().slice(0, 11);
         const user = {
             userName: this.state.userName,
-            userId: userId
+            userId: uuidv4(),
         };
 
-        sessionStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
 
         this.props.auth.login();
     }
 
     render() {
         const create = 'Create';
-        const helpText = 'Corresponding user id will be created based on your name';
-        const name = 'Name';
+        const helpText = 'Corresponding user id will be created based on your nickname';
+        const name = 'Nickname';
         const validationSuccess = 'Looks good!';
         const validationFailure = 'Please enter your name';
         return (
@@ -58,7 +58,7 @@ class CreateUserForm extends Component {
                         <Form.Control
                             required
                             name="userName"
-                            placeholder='Enter your name'
+                            placeholder='Enter your nickname'
                             value={this.state.userName}
                             onChange={this.handleChange}
                         />

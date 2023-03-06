@@ -5,7 +5,6 @@ import { CREATE_USER } from '../actions/users';
 
 const newUserDefaultAvatar = '/assets/images/no-name.png';
 
-
 const users = (state = {}, action) => {
     switch (action.type) {
         case RECEIVE_USERS:
@@ -38,9 +37,10 @@ const users = (state = {}, action) => {
                 [action.user.userId]: {
                     id: action.user.userId,
                     name: action.user.userName,
+                    email: action.user.email,
                     avatarURL: newUserDefaultAvatar,
-                    answers: {},
-                    questions: []
+                    answers: action.user.answers || {},
+                    questions: action.user.questions || [],
                 }
             };
         default:

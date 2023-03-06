@@ -22,13 +22,14 @@ export const saveStoreQuestion = (question) => {
 
 export const handleSaveQuestion = (question) => {
     return (dispatch, getState) => {
-        const { authedUser } = getState();
+        const { authedUser, users, questions } = getState();
 
         question.author = authedUser;
 
         dispatch(showLoading());
 
-        return saveQuestion(question)
+        return saveQuestion(question, authedUser, users, questions)
+            // TODO - won't be needed when backend is ready!
             .then((questionRes) => dispatch(saveStoreQuestion(questionRes)))
             .then(() => dispatch(hideLoading()))
             .catch(e => {

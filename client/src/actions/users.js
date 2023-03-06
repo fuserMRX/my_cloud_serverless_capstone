@@ -2,11 +2,11 @@ import { showLoading, hideLoading } from 'react-redux-loading';
 
 // Local Import
 import { setAuthedUser } from '../actions/authedUser';
-import { createUserDB } from '../utils/api';
-
+import { getAuthorizedUser } from '../utils/api';
 
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const CREATE_USER = 'CREATE_USER';
+export const GET_USER_INFO = 'GET_USER_INFO';
 
 export const receiveUsers = (users) => {
     return {
@@ -22,16 +22,29 @@ export const createUser = (user) => {
     };
 };
 
-export const handleCreateUser = (user) => {
-    return (dispatch) => {
-        dispatch(showLoading());
+export const getUserInfo = (user) => {
+    return {
+        type: GET_USER_INFO,
+        user
+    };
+};
 
-        return createUserDB(user)
-            .then(() => dispatch(createUser(user)))
-            .then(() => dispatch(setAuthedUser(user.userId)))
-            .then(() => dispatch(hideLoading()))
-            .catch(e => {
-                console.error('Error in createUserDB: ', e);
-            });
+export const handleCreateUser = () => {
+    return async (dispatch) => {
+        dispatch(showLoading());
+        try {
+            const { user } = getAuthorizedUser();
+            if (user) {
+                // TODO - should be removed when backend is alive
+                dispatch(createUser(user));
+
+                dispatch(setAuthedUser(user.userId));
+                dispatch(hideLoading());
+            }
+        } catch (e) {
+            console.error('Error in getAuthorizedUser: ', e);
+        } finally {
+            dispatch(hideLoading());
+        }
     };
 };

@@ -1,6 +1,6 @@
 /**
 * Combined Helper for QuestionPoll connected component
-* @param {object} object - destructuring object which is made from store
+* @param {object} object - destructuring object which is made of store
 * @param {object} props - props with router id which is taken from url
 * @returns {object} returns object depending on view - results or question itself
 */

@@ -13,14 +13,13 @@ import LeaderBoard from './components/LeaderBoard';
 import Navigation from './components/Nav';
 import GenericNotFound from './components/GenericNotFound';
 import Callback from './components/Callback';
-import { handleInitialData } from './actions/shared';
-import { handleCreateUser } from './actions/users';
 
 class App extends React.Component {
-    componentDidMount() {
-        const { dispatch } = this.props;
-        dispatch(handleInitialData());
+    state = {
+        authenticated: false
+    }
 
+    componentDidMount() {
         window.addEventListener('isAuthenticatedUpdate', this.handleAuthenticationUpdate);
     }
 
@@ -29,18 +28,13 @@ class App extends React.Component {
     }
 
     handleAuthenticationUpdate = async (ev) => {
-        const { dispatch } = this.props;
+        const { detail } = ev || {};
+        const { isAuthenticated } = detail || {};
 
-        let user = null;
-
-        try {
-            user = JSON.parse(sessionStorage.getItem('user'));
-        } catch (e) {
-            console.log(e);
-        }
-
-        if (ev.detail.isAuthenticated && user) {
-            await dispatch(handleCreateUser(user));
+        if (isAuthenticated) {
+            this.setState(() => ({
+                authenticated: true
+            }));
         }
     }
 
@@ -49,7 +43,7 @@ class App extends React.Component {
             <>
                 <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
                 <div className='container'>
-                    {(this.props.enableLogin && this.props.auth.isAuthenticated()) ?
+                    {(this.state.authenticated || (this.props.auth.isAuthenticated())) ?
                         <>
                             {this.props.enableNavBar && <Navigation auth={this.props.auth}/>}
                             <Switch>
@@ -65,8 +59,6 @@ class App extends React.Component {
                             <Route
                                 path='/callback'
                                 render={(props) => {
-                                    console.log('history pops ===========>', props);
-                                    console.log('inner props ============>', this.props);
                                     this.props.handleAuthentication(props);
                                     return <Callback />;
                                 }}

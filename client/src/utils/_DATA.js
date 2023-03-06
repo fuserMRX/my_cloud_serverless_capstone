@@ -1,8 +1,14 @@
+import Auth from '../auth/Auth';
+import Axios from 'axios';
+import { apiEndpoint } from '../config';
+import { createUserOrigin } from '../utils/userHelpers';
+
 let users = {
     user1: {
         id: 'user1',
         name: 'First User',
         avatarURL: '/assets/images/sarah.png',
+        email: 'sfgdfhdfhdfhdfh.com',
         answers: {
             "8xf0y6ziyjabvozdd253nd": 'optionOne',
             "6ni6ok3ym7mf1p33lnez": 'optionTwo',
@@ -11,28 +17,32 @@ let users = {
         },
         questions: ['8xf0y6ziyjabvozdd253nd', 'am8ehyc8byjqgar0jgpub9']
     },
+
     user2: {
         id: 'user2',
         name: 'Second User',
         avatarURL: '/assets/images/tyler.png',
+        email: 'sfgdfhdfhdfhdfh.com',
         answers: {
             "vthrdm985a262al8qx3do": 'optionOne',
             "xj352vofupe1dqz9emx13r": 'optionTwo',
         },
-        questions: ['loxhs1bqm25b708cmbf3g', 'vthrdm985a262al8qx3do'],
+        questions: ['6ni6ok3ym7mf1p33lnez', 'xj352vofupe1dqz9emx13r'],
     },
+
     user3: {
         id: 'user3',
         name: 'Third User',
         avatarURL: '/assets/images/john.png',
+        email: 'sfgdfhdfhdfhdfh.com',
         answers: {
             "xj352vofupe1dqz9emx13r": 'optionOne',
             "vthrdm985a262al8qx3do": 'optionTwo',
             "6ni6ok3ym7mf1p33lnez": 'optionTwo'
         },
-        questions: ['6ni6ok3ym7mf1p33lnez', 'xj352vofupe1dqz9emx13r'],
-    }
-}
+        questions: ['loxhs1bqm25b708cmbf3g', 'vthrdm985a262al8qx3do'],
+    },
+};
 
 let questions = {
     "8xf0y6ziyjabvozdd253nd": {
@@ -46,7 +56,7 @@ let questions = {
         optionTwo: {
             votes: [],
             text: 'have horrible long term memory'
-        }
+        },
     },
     "6ni6ok3ym7mf1p33lnez": {
         id: '6ni6ok3ym7mf1p33lnez',
@@ -147,7 +157,7 @@ function formatQuestion({ optionOneText, optionTwoText, author }) {
     }
 }
 
-export function _createUser(user) {
+export const _createUser = (user) => {
     return new Promise((res, rej) => {
 
         setTimeout(() => {
@@ -157,6 +167,7 @@ export function _createUser(user) {
                     id: user.userId,
                     name: user.userName,
                     avatarURL: '/assets/images/no-name.png',
+                    email: user.email,
                     answers: {},
                     questions: []
                 }
@@ -167,56 +178,131 @@ export function _createUser(user) {
     })
 }
 
-export function _saveQuestion(question) {
-    return new Promise((res, rej) => {
-        const authedUser = question.author;
-        const formattedQuestion = formatQuestion(question);
+export const _saveQuestion = async (question, authedUser, users, questions) => {
+    const auth = new Auth();
+    const idToken = auth.getIdToken();
 
-        setTimeout(() => {
-            questions = {
-                ...questions,
-                [formattedQuestion.id]: formattedQuestion
+    let user = users[authedUser];
+    if (!user) {
+        user = createUserOrigin(authedUser);
+    }
+
+    const formattedQuestion = formatQuestion(question);
+
+    user.questions = user.questions.concat([formattedQuestion.id]);
+
+    let questionResponse = null;
+    let userResponse = null;
+
+    try {
+        userResponse = await Axios.put(`${apiEndpoint}/users/${authedUser}`, JSON.stringify(user), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
             }
+        })
+    } catch (e) {
+        console.log(e);
+    }
 
-            users = {
-                ...users,
-                [authedUser]: {
-                    ...users[authedUser],
-                    questions: users[authedUser].questions.concat([formattedQuestion.id])
-                }
+    try {
+        questionResponse = await Axios.post(`${apiEndpoint}/questions`, JSON.stringify(formattedQuestion), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
             }
+        })
+    } catch (e) {
+        console.log(e);
+    }
 
-            res(formattedQuestion)
-        }, 1000)
-    })
+    const responseQuestions = questionResponse && questionResponse.data.item;
+    const responseUsers = userResponse && userResponse.data.item;
+
+
+    //  TODO - delete this part after dealing with backend
+    questions = {
+        ...questions,
+        [formattedQuestion.id]: formattedQuestion
+    }
+
+    users = {
+        ...users,
+        [authedUser]: {
+            ...users[authedUser],
+            questions: users[authedUser].questions.concat([formattedQuestion.id])
+        }
+    }
+
+    // res(formattedQuestion)
+    // }, 1000)
+
+    // return data;
+    return formattedQuestion;
 }
 
-export function _saveQuestionAnswer({ authedUser, qid, answer }) {
-    return new Promise((res, rej) => {
-        setTimeout(() => {
-            users = {
-                ...users,
-                [authedUser]: {
-                    ...users[authedUser],
-                    answers: {
-                        ...users[authedUser].answers,
-                        [qid]: answer
-                    }
-                }
-            }
+export const _saveQuestionAnswer = async (answerInfo, users, questions) => {
+    const auth = new Auth();
+    const idToken = auth.getIdToken();
+    const { authedUser, qid, answer } = answerInfo;
 
-            questions = {
-                ...questions,
-                [qid]: {
-                    ...questions[qid],
-                    [answer]: {
-                        ...questions[qid][answer],
-                        votes: questions[qid][answer].votes.concat([authedUser])
-                    }
-                }
-            }
+    let usersResponse = null;
+    let questionsResponse = null;
 
-            res()
-        }, 500)
-    })
+    let user = users[authedUser];
+    if (!user) {
+        user = createUserOrigin(authedUser);
+    }
+
+    user.answers[qid] = answer;
+    const changedQuesiton = questions[qid];
+    changedQuesiton[answer].votes.concat([authedUser]);
+
+    try {
+        usersResponse = await Axios.put(`${apiEndpoint}/users/${authedUser}`, JSON.stringify(user), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+
+    try {
+        questionsResponse = await Axios.patch(`${apiEndpoint}/questions/${qid}`, JSON.stringify(changedQuesiton), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+
+    //  TODO - should be uncommented when backend is implemented
+    // users = userResponse;
+    // questions = questionResponse;
+
+    users = {
+        ...users,
+        [authedUser]: {
+            ...users[authedUser],
+            answers: {
+                ...users[authedUser].answers,
+                [qid]: answer
+            }
+        }
+    }
+
+    questions = {
+        ...questions,
+        [qid]: {
+            ...questions[qid],
+            [answer]: {
+                ...questions[qid][answer],
+                votes: questions[qid][answer].votes.concat([authedUser])
+            }
+        }
+    }
 }

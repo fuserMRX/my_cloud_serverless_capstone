@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Select from 'react-select';
-import { showLoading, hideLoading } from 'react-redux-loading';
+import { showLoading } from 'react-redux-loading';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
+import { v4 as uuidv4 } from 'uuid';
 
 // Local imports
-import { setAuthedUser } from '../actions/authedUser';
-import CustomSelectOption from './CustomSelectOption';
 import CreateUserModal from './CreateUserModal';
 
 class Login extends Component {
@@ -36,11 +34,16 @@ class Login extends Component {
 
         const { dispatch } = this.props;
 
+        const user = {
+            userName: this.state.value,
+            userId: uuidv4(),
+            isCreated: true,
+        };
+
         dispatch(showLoading());
-        dispatch(setAuthedUser(this.state.value));
-        setTimeout(function () {
-            dispatch(hideLoading());
-        }, 300);
+
+        localStorage.setItem('user', JSON.stringify(user));
+        this.props.auth.login();
     }
 
     /**
@@ -61,36 +64,27 @@ class Login extends Component {
     }
 
     render() {
-        const PLACEHOLDER = 'Select User';
-        const LOGIN = 'Sign in';
         const WELCOME = 'Welcome to Would You Rather App!';
-        const SIGNIN = 'Please sign in to continue';
-        const CREATE = 'Sign up';
+        const LOGIN = 'Please log in to continue';
+        const CREATE = 'Log in';
         return (
             <>
                 <Jumbotron fluid>
                     <div className="text-center container">
-                        <h3><b>{WELCOME}</b></h3>
-                        <h5>{SIGNIN}</h5>
-                        <Image src="/assets/images/AI-jail.png" fluid />
-                        <form onSubmit={this.handleSubmit}>
-                            <Select
-                                closeMenuOnSelect={true}
-                                placeholder={PLACEHOLDER}
-                                onChange={this.handleChange}
-                                options={this.props.loginUsers}
-                                formatOptionLabel={CustomSelectOption} // Customize select option with image
-                            />
-                            <div className="loginButtons">
-                                <Button className='btn' type='submit' variant="success" disabled={!this.state.value}>
-                                    {LOGIN}
-                                </Button>
-                                <p className="loginButtonSection"><b>OR</b></p>
-                                <Button className='btn' variant="success" onClick={this.handleModal} value={true}>
-                                    {CREATE}
-                                </Button>
-                            </div>
-                        </form>
+                        <div className=''>
+                            <h3><b>{WELCOME}</b></h3>
+                            <h5>{LOGIN}</h5>
+                            <Image src="/assets/images/AI-jail.png" fluid />
+                        </div>
+                        <div className=''>
+                            <form onSubmit={this.handleSubmit}>
+                                <div className="loginButtons">
+                                    <Button className='btn' variant="success" onClick={this.handleModal} value={true}>
+                                        {CREATE}
+                                    </Button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </Jumbotron>
                 <CreateUserModal auth={this.props.auth} show={this.state.modalShow} onHide={this.handleModal}/>

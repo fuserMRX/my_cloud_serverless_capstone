@@ -7,7 +7,7 @@ export default class Auth {
         clientID: authConfig.clientId,
         redirectUri: authConfig.callbackUrl,
         responseType: 'token id_token',
-        scope: 'openid'
+        scope: 'openid email'
     });
 
     constructor(history) {
@@ -26,18 +26,21 @@ export default class Auth {
     }
 
     handleAuthentication = () => {
-        const authenticationEvent = new CustomEvent('isAuthenticatedUpdate', {
-            detail: {
-                isAuthenticated: true,
-            }
-        });
-
         this.auth0.parseHash((err, authResult) => {
-            if (authResult && authResult.accessToken && authResult.idToken) {
+            const {idTokenPayload, accessToken, idToken} = authResult || {};
+            if (idTokenPayload && accessToken && idToken) {
+                const { email } = idTokenPayload;
                 console.log('Access token: ', authResult.accessToken);
                 console.log('id token: ', authResult.idToken);
+
                 this.setSession(authResult);
-                window.dispatchEvent(authenticationEvent);
+
+                window.dispatchEvent(new CustomEvent('isAuthenticatedUpdate', {
+                    detail: {
+                        isAuthenticated: true,
+                        email
+                    }
+                }));
             } else if (err) {
                 this.history.replace('/');
                 console.log(err);
@@ -71,18 +74,10 @@ export default class Auth {
     }
 
     setSession(authResult) {
-        // Set isLoggedIn flag in localStorage
-        localStorage.setItem('isLoggedIn', 'true');
+        const { expiresIn, idTokenPayload, accessToken, idToken } = authResult || {};
+        const { email } = idTokenPayload || {};
 
-        // Set the time that the access token will expire at
-        const expiresAt = JSON.stringify(
-            authResult.expiresIn * 1000 + new Date().getTime()
-        );
-
-        localStorage.setItem('access_token', authResult.accessToken);
-        localStorage.setItem('id_token', authResult.idToken);
-        localStorage.setItem('expires_at', expiresAt);
-
+        this.setStorageItems(email, expiresIn, accessToken, idToken);
 
         // The history state should be cleared with an empty object otherwise
         // we will get the previous 'callback' location there
@@ -104,7 +99,19 @@ export default class Auth {
         });
     }
 
-    logout() {
+    setStorageItems(email, expiresIn, accessToken, idToken) {
+        // Set the time that the access token will expire at
+        const expiresAt = JSON.stringify(expiresIn * 1000 + new Date().getTime());
+
+        // Set isLoggedIn flag in localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('id_token', idToken);
+        localStorage.setItem('expires_at', expiresAt);
+        localStorage.setItem('email', email);
+    }
+
+    removeStorageItems() {
         // Remove tokens and expiry time
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
@@ -113,7 +120,12 @@ export default class Auth {
         // Remove isLoggedIn flag from localStorage
         localStorage.removeItem('isLoggedIn');
 
-        sessionStorage.removeItem('user');
+        localStorage.removeItem('user');
+        localStorage.removeItem('email');
+    }
+
+    logout() {
+        this.removeStorageItems();
 
         // Allowed logout URL should be configured on https://manage.auth0.com/!!!! for a correct redirect
         this.auth0.logout();

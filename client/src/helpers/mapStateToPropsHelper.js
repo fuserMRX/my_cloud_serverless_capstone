@@ -32,6 +32,7 @@ export const mapStateToProps = (viewParam) => {
                 return answers.indexOf(question.id) === -1;
             }).sort((a, b) => b.timestamp - a.timestamp);
         }
+
         if (viewParam === answeredView) {
             sortedQuestions = Object.values(questions).filter((question) => {
                 return answers.indexOf(question.id) !== -1;

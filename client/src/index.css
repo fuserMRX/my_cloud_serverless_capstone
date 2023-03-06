@@ -249,6 +249,14 @@ li {
   display: contents;
 }
 
+.userLogo .userEmail {
+  display: contents;
+  font-size: 13px;
+  font-weight: bold;
+  font-style: italic;
+  color: #227600;
+}
+
 .userLogoImage {
   margin-left: 10px;
 }

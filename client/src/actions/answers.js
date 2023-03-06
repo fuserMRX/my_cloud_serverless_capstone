@@ -17,14 +17,14 @@ export const saveAnswer = ({authedUser, qid, answer}) => {
     };
 };
 
-
-export const handleSaveAnswer = (answer) => {
-    return (dispatch) => {
-
+export const handleSaveAnswer = (answerInfo) => {
+    return (dispatch, getState) => {
         dispatch(showLoading());
 
-        return saveQuestionAnswer(answer)
-            .then(() => dispatch(saveAnswer(answer)))
+        const { users, questions } = getState();
+
+        return saveQuestionAnswer(answerInfo, users, questions)
+            .then(() => dispatch(saveAnswer(answerInfo)))
             .then(() => dispatch(hideLoading()))
             .catch(e => {
                 console.error('Error in handleSaveAnswer: ', e);

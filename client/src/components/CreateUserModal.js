@@ -13,7 +13,7 @@ class CreateUserModal extends Component {
     };
 
     render() {
-        const createUser = 'Create a new user';
+        const createUser = 'Create a new nickname you want to use during your session';
         return (
             <div>
                 <Modal

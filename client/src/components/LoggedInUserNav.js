@@ -7,6 +7,7 @@ const LoggedInUserNav = (props) => {
     return (
         <div className="userLogo">
             <p className="userName">{helloText}, {props.userInfo.name}</p>
+            <p className="userEmail"> ({props.userInfo.email})</p>
             <img className="circle userLogoImage" src={props.userInfo.avatarURL} alt={props.userInfo.name} width='40'/>
         </div>
     );
@@ -20,7 +21,7 @@ const mapStateToProps = ({ users, authedUser }) => {
     return {
         userInfo: Object.values(users)
             .filter(({ id }) => id === authedUser)
-            .map(({ name, avatarURL }) => ({ name, avatarURL }))[0] || {}
+            .map(({ name, avatarURL, email }) => ({ name, avatarURL, email }))[0] || {}
     };
 };
 
