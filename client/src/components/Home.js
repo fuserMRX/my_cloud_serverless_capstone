@@ -7,7 +7,6 @@ import Spinner from 'react-bootstrap/Spinner';
 // Local Import
 import UnansweredQuestionsList from './UnansweredQuestionsList';
 import AnsweredQuestionsList from './AnsweredQuestionsList';
-import { handleCreateUser } from '../actions/users';
 import { handleInitialData } from '../actions/shared';
 
 const Home = () => {
@@ -17,10 +16,11 @@ const Home = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(handleCreateUser());
-        dispatch(handleInitialData());
-        setSpinnerKey(false);
-    }, []);
+        (async function fetchInitialData() {
+            await handleInitialData(dispatch);
+            setSpinnerKey(false);
+        })();
+    }, [dispatch]);
 
     return (
         <>

@@ -9,7 +9,7 @@ export const mapStateToProps = (viewParam) => {
     return function ({ users, questions, authedUser }) {
         let userNames = {};
         // Filter only loggedIn user data and get question owner data like name, avatarURL
-        const loggedInUserData = Object.values(users).filter((user) => {
+        Object.values(users).filter((user) => {
             userNames = {
                 ...userNames,
                 [user.id]: {
@@ -18,11 +18,11 @@ export const mapStateToProps = (viewParam) => {
                     avatarURL: user.avatarURL
                 },
             };
-            return user.id === authedUser;
         });
 
         // LoggedIn user answers
-        const answers = (loggedInUserData.length && Object.keys(loggedInUserData[0].answers)) || [];
+        // const answers = (loggedInUserData.length && Object.keys(loggedInUserData[0].answers)) || [];
+        const answers = (authedUser.answers) || [];
 
         // Answered and unanswered quesitons for the loggedIn user
         let sortedQuestions = [];

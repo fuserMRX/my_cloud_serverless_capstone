@@ -52,7 +52,7 @@ export default class Auth {
     getAccessToken() {
         let accessToken = null;
         try {
-            accessToken = JSON.parse(localStorage.getItem('access_token'));
+            accessToken = localStorage.getItem('access_token');
             return accessToken;
         } catch (e) {
             console.log(`Error in parsing of accessToken: ${e}`);
@@ -64,7 +64,7 @@ export default class Auth {
     getIdToken() {
         let idToken = null;
         try {
-            idToken = JSON.parse(localStorage.getItem('id_token'));
+            idToken = localStorage.getItem('id_token');
             return idToken;
         } catch (e) {
             console.log(`Error in parsing of idToken: ${e}`);

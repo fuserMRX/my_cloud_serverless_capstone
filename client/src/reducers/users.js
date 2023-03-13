@@ -1,9 +1,9 @@
 import { RECEIVE_USERS } from '../actions/users';
 import { SAVE_ANSWER } from '../actions/answers';
 import { SAVE_QUESTION } from '../actions/questions';
-import { CREATE_USER } from '../actions/users';
+// import { CREATE_USER } from '../actions/users';
 
-const newUserDefaultAvatar = '/assets/images/no-name.png';
+// const newUserDefaultAvatar = '/assets/images/no-name.png';
 
 const users = (state = {}, action) => {
     switch (action.type) {
@@ -31,18 +31,19 @@ const users = (state = {}, action) => {
                     questions: state[action.question.author].questions.concat([action.question.id])
                 }
             };
-        case CREATE_USER:
-            return {
-                ...state,
-                [action.user.userId]: {
-                    id: action.user.userId,
-                    name: action.user.userName,
-                    email: action.user.email,
-                    avatarURL: newUserDefaultAvatar,
-                    answers: action.user.answers || {},
-                    questions: action.user.questions || [],
-                }
-            };
+        // TODO - should be removed after implementation
+        // case CREATE_USER:
+        //     return {
+        //         ...state,
+        //         [action.user.usersId]: {
+        //             id: action.user.userId,
+        //             name: action.user.userName,
+        //             email: action.user.email,
+        //             avatarURL: newUserDefaultAvatar,
+        //             answers: action.user.answers || {},
+        //             questions: action.user.questions || [],
+        //         }
+        //     };
         default:
             return state;
     }

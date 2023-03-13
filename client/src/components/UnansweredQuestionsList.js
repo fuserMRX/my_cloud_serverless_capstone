@@ -10,7 +10,7 @@ import { unansweredView } from '../helpers/viewHelper';
 const UnansweredQuestionsList = (props) => {
     return (
         <div>
-            {props.unansweredQuestions.map(unansweredQuestion => (
+            {props.unansweredQuestions && props.unansweredQuestions.map(unansweredQuestion => (
                 <QuestionView key={unansweredQuestion.id}
                     question={unansweredQuestion}
                     questionOwnerData={props.userNames[unansweredQuestion.author]}

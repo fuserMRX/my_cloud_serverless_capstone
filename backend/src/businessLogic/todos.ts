@@ -4,12 +4,22 @@ import { CreateTodoRequest } from '../requests/CreateTodoRequest';
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest';
 import * as uuid from 'uuid';
 
-// TODO: Implement businessLogic - done
-
 const todoAccess = new TodosAccess();
 
 export async function getTodosForUser(userId: string): Promise<TodoItem[]> {
     return todoAccess.getTodosForUser(userId);
+};
+
+export async function getUsersForAuthorizedUser(userId) {
+    return todoAccess.getUsersForAuthorizedUser(userId);
+};
+
+export async function getQuestionsForAuthorizedUser(userId) {
+    return todoAccess.getQuestionsForAuthorizedUser(userId);
+};
+
+export async function getAuthorizedUserInfo(userId) {
+    return todoAccess.getAuthorizedUserInfo(userId);
 };
 
 export async function createTodo(

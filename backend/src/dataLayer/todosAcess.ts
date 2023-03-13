@@ -7,7 +7,7 @@ import { TodoUpdate } from '../models/TodoUpdate';
 
 const XAWS = AWSXRay.captureAWS(AWS);
 
-const logger = createLogger('TodosAccess');
+const logger = createLogger('WouldYouRatherAccess');
 
 // TODO: Implement the dataLayer logic - done
 export class TodosAccess {
@@ -15,6 +15,8 @@ export class TodosAccess {
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
         private readonly todosTable = process.env.TODOS_TABLE,
+        private readonly usersTable = process.env.USERS_TABLE,
+        private readonly questionsTable = process.env.QUESTIONS_TABLE,
         private readonly bucket = process.env.ATTACHMENT_S3_BUCKET,
         private readonly S3 = new XAWS.S3({
             signatureVersion: 'v4'
@@ -41,6 +43,60 @@ export class TodosAccess {
         logger.info('All todos results', JSON.stringify(items));
 
         return items as TodoItem[];
+    }
+
+    async getUsersForAuthorizedUser(userId) {
+        console.log('Getting all users');
+
+        const result = await this.docClient.scan({
+            TableName: this.usersTable,
+        }, (err, data) => {
+            if (err) console.log(err);
+            else console.log(data);
+        }).promise();
+
+        const users = result.Items;
+        logger.info('All users results', JSON.stringify(users));
+
+        return users;
+    }
+
+    async getQuestionsForAuthorizedUser(userId) {
+        console.log('Getting all questions');
+
+        const result = await this.docClient.scan({
+            TableName: this.questionsTable,
+        }, (err, data) => {
+            if (err) console.log(err);
+            else console.log(data);
+        }).promise();
+
+        const questions = result.Items;
+        logger.info('All questions results', JSON.stringify(questions));
+
+        return questions;
+    }
+
+    async getAuthorizedUserInfo(userId) {
+        console.log('Getting authorized user info');
+        console.log('USERID ==> ', userId);
+
+        const result = await this.docClient.query({
+            TableName: this.usersTable,
+            IndexName: 'CreatedAtIndex',
+            KeyConditionExpression: 'id = :id',
+            ExpressionAttributeValues: {
+                ':id': userId
+            },
+        }, (err, data) => {
+            if (err) console.log(err);
+            else console.log(data);
+        }).promise();
+
+        const userInfo = result.Items;
+        logger.info('Authed user info results', JSON.stringify(userInfo));
+
+        return userInfo;
     }
 
     async createTodo(todoItem: TodoItem): Promise<TodoItem> {

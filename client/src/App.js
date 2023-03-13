@@ -43,9 +43,9 @@ class App extends React.Component {
             <>
                 <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
                 <div className='container'>
-                    {(this.state.authenticated || (this.props.auth.isAuthenticated())) ?
+                    {(this.state.authenticated || this.props.auth.isAuthenticated()) ?
                         <>
-                            {this.props.enableNavBar && <Navigation auth={this.props.auth}/>}
+                            {this.props.enableLogin && <Navigation auth={this.props.auth}/>}
                             <Switch>
                                 <Route path='/' exact component={Home} />
                                 <Route path='/questions/:question_id' exact component={QuestionPollWrapper} />
@@ -71,10 +71,9 @@ class App extends React.Component {
     }
 }
 
-const mapeStateToProps = ({ authedUser, navbar }) => {
+const mapeStateToProps = ({ authedUser }) => {
     return {
-        enableLogin: authedUser !== null,
-        enableNavBar: navbar,
+        enableLogin: authedUser !== null
     };
 };
 

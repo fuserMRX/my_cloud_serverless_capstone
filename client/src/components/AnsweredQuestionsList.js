@@ -9,7 +9,7 @@ import { answeredView } from '../helpers/viewHelper';
 const AnsweredQuestionsList = (props) => {
     return (
         <div>
-            {props.answeredQuestions.map(answeredQuestion => (
+            {props.answeredQuestions && props.answeredQuestions.map(answeredQuestion => (
                 <QuestionView key={answeredQuestion.id}
                     question={answeredQuestion}
                     questionOwnerData={props.userNames[answeredQuestion.author]}

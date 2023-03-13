@@ -17,11 +17,9 @@ LoggedInUserNav.propTypes = {
     userInfo: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({ users, authedUser }) => {
+const mapStateToProps = ({ authedUser }) => {
     return {
-        userInfo: Object.values(users)
-            .filter(({ id }) => id === authedUser)
-            .map(({ name, avatarURL, email }) => ({ name, avatarURL, email }))[0] || {}
+        userInfo: authedUser
     };
 };
 

@@ -35,8 +35,8 @@ class CreateUserForm extends Component {
 
         // make user Id no more than 10 symols without spaces
         const user = {
-            userName: this.state.userName,
-            userId: uuidv4(),
+            name: this.state.userName,
+            id: uuidv4(),
         };
 
         localStorage.setItem('user', JSON.stringify(user));

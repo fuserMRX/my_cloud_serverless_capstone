@@ -129,17 +129,96 @@ function generateUID() {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
-export function _getUsers() {
-    return new Promise((res, rej) => {
-        setTimeout(() => res({ ...users }), 1000)
-    })
+export const _getUsers = async () => {
+    const auth = new Auth();
+    const idToken = auth.getIdToken();
+
+    console.log('Fetching users');
+    let users = [];
+
+    try {
+        const response = await Axios.get(`${apiEndpoint}/users`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+        });
+
+        const { data } = response || {};
+        const { users: responseUsers } = data || [];
+
+        responseUsers && responseUsers.forEach((responseUser) => {
+            responseUser.answers = JSON.parse(responseUser.answers);
+            responseUser.questions = JSON.parse(responseUser.questions);
+        });
+
+        console.log('Users:', responseUsers);
+        users = responseUsers;
+    } catch (e) {
+        console.log(e);
+    }
+
+    return users;
 }
 
-export function _getQuestions() {
-    return new Promise((res, rej) => {
-        setTimeout(() => res({ ...questions }), 1000)
-    })
+export const _getQuestions = async() => {
+    const auth = new Auth();
+    const idToken = auth.getIdToken();
+
+    console.log('Fetching questions');
+    let questions = [];
+
+    try {
+        const response = await Axios.get(`${apiEndpoint}/questions`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+        });
+
+        const { data } = response || {};
+        const { questions: responseQuesitons } = data || [];
+
+        responseQuesitons && responseQuesitons.forEach((responseQuestion) => {
+            responseQuestion.optionOne = JSON.parse(responseQuestion.optionOne);
+            responseQuestion.optionTwo = JSON.parse(responseQuestion.optionTwo);
+        });
+
+        console.log('Questions:', responseQuesitons);
+        questions = responseQuesitons;
+    } catch (e) {
+        console.log(e);
+    }
+
+    return questions;
 }
+
+export const _getAuthorizedUserInfo = async () => {
+    const auth = new Auth();
+    const idToken = auth.getIdToken();
+    
+    console.log('Fetching user Info');
+    let userInfo = {};
+
+    try {
+        const response = await Axios.get(`${apiEndpoint}/userInfo`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+        });
+
+        const { data } = response || {};
+        const { userInfo: reponseUserInfo } = data || {};
+
+        console.log('UsersInfo:', reponseUserInfo);
+        userInfo = reponseUserInfo && reponseUserInfo.length && reponseUserInfo[0];
+    } catch (e) {
+        console.log(e);
+    }
+
+    return userInfo;
+};
 
 function formatQuestion({ optionOneText, optionTwoText, author }) {
     return {

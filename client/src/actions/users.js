@@ -2,7 +2,7 @@ import { showLoading, hideLoading } from 'react-redux-loading';
 
 // Local Import
 import { setAuthedUser } from '../actions/authedUser';
-import { getAuthorizedUser } from '../utils/api';
+import { getAuthorizedUser } from '../utils/userHelpers';
 
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const CREATE_USER = 'CREATE_USER';
@@ -29,18 +29,15 @@ export const getUserInfo = (user) => {
     };
 };
 
-export const handleCreateUser = () => {
+export const handleCreateUser = (userInfo) => {
     return async (dispatch) => {
         dispatch(showLoading());
         try {
             const { user } = getAuthorizedUser();
-            if (user) {
-                // TODO - should be removed when backend is alive
-                dispatch(createUser(user));
+            const authedUser = userInfo || user;
 
-                dispatch(setAuthedUser(user.userId));
-                dispatch(hideLoading());
-            }
+            dispatch(setAuthedUser(authedUser));
+            dispatch(hideLoading());
         } catch (e) {
             console.error('Error in getAuthorizedUser: ', e);
         } finally {

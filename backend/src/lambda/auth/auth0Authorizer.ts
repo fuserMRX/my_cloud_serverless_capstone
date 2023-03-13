@@ -10,7 +10,6 @@ const jwks = require('jwks-rsa')
 
 const logger = createLogger('auth')
 
-// TODO: Provide a URL that can be used to download a certificate that can be used - done
 // to verify JWT token signature.
 // To get this URL you need to go to an Auth0 page -> Show Advanced Settings -> Endpoints -> JSON Web Key Set
 const jwksUrl = 'https://dev-imwin-7q.us.auth0.com/.well-known/jwks.json'
@@ -68,7 +67,6 @@ async function verifyToken(authHeader: string) {
   const signingKey = await client.getSigningKey(kid)
   const publicKey = signingKey.getPublicKey()
 
-  // TODO: Implement token verification - done
   // You should implement it similarly to how it was implemented for the exercise for the lesson 5
   // You can read more about how to do this here: https://auth0.com/blog/navigating-rs256-and-jwks/
   return verify(token, publicKey, { algorithms: ['RS256'] })
