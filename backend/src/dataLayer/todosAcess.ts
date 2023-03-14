@@ -24,27 +24,6 @@ export class TodosAccess {
         private readonly urlExp = +process.env.SIGNED_URL_EXPIRATION) {
     }
 
-    async getTodosForUser(userId): Promise<TodoItem[]> {
-        console.log('Getting all todos');
-
-        const result = await this.docClient.query({
-            TableName: this.todosTable,
-            IndexName: 'CreatedAtIndex',
-            KeyConditionExpression: 'userId = :userId',
-            ExpressionAttributeValues: {
-                ':userId': userId
-            },
-        }, (err, data) => {
-            if (err) console.log(err);
-            else console.log(data);
-        }).promise();
-
-        const items = result.Items;
-        logger.info('All todos results', JSON.stringify(items));
-
-        return items as TodoItem[];
-    }
-
     async getUsersForAuthorizedUser(userId) {
         console.log('Getting all users');
 
@@ -97,6 +76,26 @@ export class TodosAccess {
         logger.info('Authed user info results', JSON.stringify(userInfo));
 
         return userInfo;
+    }
+
+    async createUpdateUser(userItem) {
+        logger.info('CreateUpdate User', JSON.stringify(userItem));
+        await this.docClient.put({
+            TableName: this.usersTable,
+            Item: userItem
+        }).promise();
+
+        return userItem;
+    }
+
+    async createQuestion(question) {
+        logger.info('Create Question', JSON.stringify(question));
+        await this.docClient.put({
+            TableName: this.questionsTable,
+            Item: question
+        }).promise();
+
+        return question;
     }
 
     async createTodo(todoItem: TodoItem): Promise<TodoItem> {

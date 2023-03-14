@@ -6,10 +6,6 @@ import * as uuid from 'uuid';
 
 const todoAccess = new TodosAccess();
 
-export async function getTodosForUser(userId: string): Promise<TodoItem[]> {
-    return todoAccess.getTodosForUser(userId);
-};
-
 export async function getUsersForAuthorizedUser(userId) {
     return todoAccess.getUsersForAuthorizedUser(userId);
 };
@@ -20,6 +16,14 @@ export async function getQuestionsForAuthorizedUser(userId) {
 
 export async function getAuthorizedUserInfo(userId) {
     return todoAccess.getAuthorizedUserInfo(userId);
+};
+
+export async function createUpdateUser(createUserRequest) {
+    return await todoAccess.createUpdateUser(createUserRequest);
+};
+
+export async function createQuestion(createQuestionRequest) {
+    return await todoAccess.createQuestion(createQuestionRequest);
 };
 
 export async function createTodo(

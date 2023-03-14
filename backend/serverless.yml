@@ -112,32 +112,59 @@ functions:
   # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
   # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
   # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
-  # CreateTodo:
-  #   handler: src/lambda/http/createTodo.handler
-  #   events:
-  #     - http:
-  #         method: post
-  #         path: todos
-  #         cors: true
-  #         authorizer: Auth
-  #         request:
-  #           schemas:
-  #             application/json: ${file(models/create-todo-model.json)}
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - dynamodb:PutItem
-  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REACT_WOULD_TABLE}
-  #     # should be added too in order to avoid "no identity-based policy" error for LocalSecondaryIndexes
-  #     - Effect: Allow
-  #       Action:
-  #         - dynamodb:PutItem
-  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REACT_WOULD_TABLE}/index/*
-  #     - Effect: Allow
-  #       Action:
-  #         - xray:PutTelemetryRecords
-  #         - xray:PutTraceSegments
-  #       Resource: "*"
+  CreateUpdateUser:
+    handler: src/lambda/http/createUpdateUser.handler
+    events:
+      - http:
+          method: put
+          path: users
+          cors: true
+          authorizer: Auth
+          request:
+            schemas:
+              application/json: ${file(models/create-user-model.json)}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}
+      # should be added too in order to avoid "no identity-based policy" error for LocalSecondaryIndexes
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}/index/*
+      - Effect: Allow
+        Action:
+          - xray:PutTelemetryRecords
+          - xray:PutTraceSegments
+        Resource: "*"
+
+  CreateQuestion:
+    handler: src/lambda/http/createQuestion.handler
+    events:
+      - http:
+          method: post
+          path: questions
+          cors: true
+          authorizer: Auth
+          request:
+            schemas:
+              application/json: ${file(models/create-question-model.json)}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QUESTIONS_TABLE}
+      # should be added too in order to avoid "no identity-based policy" error for LocalSecondaryIndexes
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QUESTIONS_TABLE}/index/*
+      - Effect: Allow
+        Action:
+          - xray:PutTelemetryRecords
+          - xray:PutTraceSegments
+        Resource: "*"
 
   # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
   # UpdateTodo:
@@ -222,7 +249,7 @@ resources:
         ResponseParameters:
           gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
           gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST,PUT,PATCH'"
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: ApiGatewayRestApi

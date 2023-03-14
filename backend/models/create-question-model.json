@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "group",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "author": {
+        "type": "string"
+      },
+      "optionOne":{
+        "type": "string"
+      },
+      "optionTwo":{
+        "type": "string"
+      },
+      "timestamp":{
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "author",
+      "optionOne",
+      "optionTwo",
+      "timestamp"
+    ],
+    "additionalProperties": false
+  }
+  
