@@ -34,10 +34,9 @@ class QuestionPoll extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         const qid = this.props.questionInfo.currentQuestion.id;
-        const authedUser = this.props.questionInfo.authedUser;
         const answer = this.state.value;
         const { dispatch } = this.props;
-        dispatch(handleSaveAnswer({ authedUser, qid, answer }));
+        dispatch(handleSaveAnswer({ qid, answer }));
     }
 
     render() {

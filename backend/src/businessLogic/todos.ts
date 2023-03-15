@@ -26,6 +26,10 @@ export async function createQuestion(createQuestionRequest) {
     return await todoAccess.createQuestion(createQuestionRequest);
 };
 
+export async function updateQuestion(updateQuestionRequest) {
+    return await todoAccess.updateQuestion(updateQuestionRequest);
+};
+
 export async function createTodo(
     createTodoRequest: CreateTodoRequest,
     userId: string

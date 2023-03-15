@@ -23,8 +23,8 @@ export const saveQuestion = (question, authedUser) => {
     return _saveQuestion(question, authedUser);
 }
 
-export const saveQuestionAnswer = (answerInfo, users, questions) => {
-    return _saveQuestionAnswer(answerInfo, users, questions);
+export const saveQuestionAnswer = (answerInfo, questions) => {
+    return _saveQuestionAnswer(answerInfo, questions);
 }
 
 export const createUserDB = (user) => {

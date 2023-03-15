@@ -98,6 +98,22 @@ export class TodosAccess {
         return question;
     }
 
+    async updateQuestion({ qid, userId, updateQuestionItem }) {
+        const { optionOne, optionTwo, author } = updateQuestionItem;
+        await this.docClient.update({
+            TableName: this.questionsTable,
+            Key: { id: qid, author },
+            ExpressionAttributeNames: { '#N': 'optionOne' },
+            UpdateExpression: 'set #N = :optionOne, optionTwo = :optionTwo',
+            ExpressionAttributeValues: {
+                ':optionOne': optionOne,
+                ':optionTwo': optionTwo
+            },
+        }).promise();
+
+        return updateQuestionItem;
+    }
+
     async createTodo(todoItem: TodoItem): Promise<TodoItem> {
         logger.info('CreateTodo Item', JSON.stringify(todoItem));
         await this.docClient.put({

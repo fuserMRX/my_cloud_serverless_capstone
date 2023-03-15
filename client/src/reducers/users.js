@@ -16,9 +16,9 @@ const users = (state = {}, action) => {
             return {
                 ...state,
                 [action.authedUser]: {
-                    ...state[action.authedUser],
+                    ...state[action.authedUser.id],
                     answers: {
-                        ...state[action.authedUser].answers,
+                        ...state[action.authedUser.id].answers,
                         [action.qid]: action.answer
                     }
                 }
@@ -31,19 +31,6 @@ const users = (state = {}, action) => {
                     questions: state[action.question.author].questions.concat([action.question.id])
                 }
             };
-        // TODO - should be removed after implementation
-        // case CREATE_USER:
-        //     return {
-        //         ...state,
-        //         [action.user.usersId]: {
-        //             id: action.user.userId,
-        //             name: action.user.userName,
-        //             email: action.user.email,
-        //             avatarURL: newUserDefaultAvatar,
-        //             answers: action.user.answers || {},
-        //             questions: action.user.questions || [],
-        //         }
-        //     };
         default:
             return state;
     }

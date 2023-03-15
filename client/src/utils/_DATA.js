@@ -1,7 +1,6 @@
 import Auth from '../auth/Auth';
 import Axios from 'axios';
 import { apiEndpoint } from '../config';
-import { createUserOrigin } from '../utils/userHelpers';
 
 let users = {
     user1: {
@@ -258,7 +257,7 @@ export const _saveQuestion = async (question, authedUser) => {
     try {
         await Axios.put(`${apiEndpoint}/users`, JSON.stringify(authedUser), {
             headers: {
-                // add 'text/plain' because 'applicaiton/json' does not work correctly with nested json for lambda functions
+                // add 'text/plain' because 'applicaiton/json' does not work properly with nested json for lambda functions
                 'Content-Type': 'text/plain',
                 'Authorization': `Bearer ${idToken}`
             }
@@ -270,7 +269,7 @@ export const _saveQuestion = async (question, authedUser) => {
     try {
         await Axios.post(`${apiEndpoint}/questions`, JSON.stringify(formattedQuestion), {
             headers: {
-                // add 'text/plain' because 'applicaiton/json' does not work correctly with nested json for lambda functions
+                // add 'text/plain' because 'applicaiton/json' does not work properly with nested json for lambda functions
                 'Content-Type': 'text/plain',
                 'Authorization': `Bearer ${idToken}`
             }
@@ -282,68 +281,39 @@ export const _saveQuestion = async (question, authedUser) => {
     return formattedQuestion;
 }
 
-export const _saveQuestionAnswer = async (answerInfo, users, questions) => {
+export const _saveQuestionAnswer = async (answerInfo, questions) => {
     const auth = new Auth();
     const idToken = auth.getIdToken();
     const { authedUser, qid, answer } = answerInfo;
 
-    let usersResponse = null;
-    let questionsResponse = null;
+    authedUser.answers[qid] = answer;
+    const changedQuesiton = Object.keys(questions).length && Object.values(questions).filter((question) => question.id === qid);
 
-    let user = users[authedUser];
-    if (!user) {
-        user = createUserOrigin(authedUser);
-    }
+    if (changedQuesiton) {
+        changedQuesiton[0][answer].votes = changedQuesiton[0][answer].votes.concat([authedUser.id]);
 
-    user.answers[qid] = answer;
-    const changedQuesiton = questions[qid];
-    changedQuesiton[answer].votes.concat([authedUser]);
+        try {
+            await Axios.put(`${apiEndpoint}/users`, JSON.stringify(authedUser), {
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'Authorization': `Bearer ${idToken}`
+                }
+            })
+        } catch (e) {
+            console.log(e);
+        }
 
-    try {
-        usersResponse = await Axios.put(`${apiEndpoint}/users/${authedUser}`, JSON.stringify(user), {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${idToken}`
-            }
-        })
-    } catch (e) {
-        console.log(e);
-    }
-
-    try {
-        questionsResponse = await Axios.patch(`${apiEndpoint}/questions/${qid}`, JSON.stringify(changedQuesiton), {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${idToken}`
-            }
-        })
-    } catch (e) {
-        console.log(e);
-    }
-
-    //  TODO - should be uncommented when backend is implemented
-    // users = userResponse;
-    // questions = questionResponse;
-
-    users = {
-        ...users,
-        [authedUser]: {
-            ...users[authedUser],
-            answers: {
-                ...users[authedUser].answers,
-                [qid]: answer
-            }
+        try {
+            await Axios.patch(`${apiEndpoint}/questions/${qid}`, JSON.stringify(changedQuesiton[0]), {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                }
+            })
+        } catch (e) {
+            console.log(e);
         }
     }
 
-    questions = {
-        ...questions,
-        [qid]: {
-            ...questions[qid],
-            [answer]: {
-                ...questions[qid][answer],
-                votes: questions[qid][answer].votes.concat([authedUser])
-            }
-        }
-    }
+    return  { authedUser };
 }

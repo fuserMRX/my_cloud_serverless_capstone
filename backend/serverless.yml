@@ -167,32 +167,29 @@ functions:
         Resource: "*"
 
   # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
-  # UpdateTodo:
-  #   handler: src/lambda/http/updateTodo.handler
-  #   events:
-  #     - http:
-  #         method: patch
-  #         path: todos/{todoId}
-  #         cors: true
-  #         authorizer: Auth
-  #         request:
-  #           schemas:
-  #             application/json: ${file(models/update-todo-model.json)}
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - dynamodb:UpdateItem
-  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REACT_WOULD_TABLE}
-  #     # should be added too in order to avoid "no identity-based policy" error for LocalSecondaryIndexes
-  #     - Effect: Allow
-  #       Action:
-  #         - dynamodb:UpdateItem
-  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REACT_WOULD_TABLE}/index/*
-  #     - Effect: Allow
-  #       Action:
-  #         - xray:PutTelemetryRecords
-  #         - xray:PutTraceSegments
-  #       Resource: "*"
+  UpdateQuestion:
+    handler: src/lambda/http/updateQuestion.handler
+    events:
+      - http:
+          method: patch
+          path: questions/{qid}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QUESTIONS_TABLE}
+      # should be added too in order to avoid "no identity-based policy" error for LocalSecondaryIndexes
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QUESTIONS_TABLE}/index/*
+      - Effect: Allow
+        Action:
+          - xray:PutTelemetryRecords
+          - xray:PutTraceSegments
+        Resource: "*"
 
   # Provide property for setting up CORS, Authorizer, iamRoleStatements
   # DeleteTodo:
