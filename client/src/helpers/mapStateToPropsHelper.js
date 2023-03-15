@@ -8,8 +8,8 @@ import { unansweredView, answeredView } from '../helpers/viewHelper';
 export const mapStateToProps = (viewParam) => {
     return function ({ users, questions, authedUser }) {
         let userNames = {};
-        // Filter only loggedIn user data and get question owner data like name, avatarURL
-        Object.values(users).filter((user) => {
+
+        Object.values(users).forEach((user) => {
             userNames = {
                 ...userNames,
                 [user.id]: {
@@ -21,21 +21,24 @@ export const mapStateToProps = (viewParam) => {
         });
 
         // LoggedIn user answers
-        // const answers = (loggedInUserData.length && Object.keys(loggedInUserData[0].answers)) || [];
-        const answers = (authedUser.answers) || [];
+        const answers = (authedUser.answers) || {};
 
         // Answered and unanswered quesitons for the loggedIn user
         let sortedQuestions = [];
 
         if (viewParam === unansweredView) {
             sortedQuestions = Object.values(questions).filter((question) => {
-                return answers.indexOf(question.id) === -1;
+                if (!(question.id in answers)) {
+                    return question;
+                }
             }).sort((a, b) => b.timestamp - a.timestamp);
         }
 
         if (viewParam === answeredView) {
             sortedQuestions = Object.values(questions).filter((question) => {
-                return answers.indexOf(question.id) !== -1;
+                if (question.id in answers) {
+                    return question;
+                }
             }).sort((a, b) => b.timestamp - a.timestamp);
         }
 

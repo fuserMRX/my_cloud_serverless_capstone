@@ -7,6 +7,8 @@ const getAuthorizedUser = () => {
         email = localStorage.getItem('email');
         user.email = email;
         user.avatarURL = '/assets/images/no-name.png';
+        user.answers = {};
+        user.questions = [];
     } catch (e) {
         console.log(e);
     }

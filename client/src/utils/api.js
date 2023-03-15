@@ -12,14 +12,15 @@ export const getInitialData = () => {
         _getUsers(),
         _getQuestions(),
         _getAuthorizedUserInfo(),
-    ]).then(([users, questions]) => ({
+    ]).then(([users, questions, userInfo]) => ({
         users,
         questions,
+        userInfo,
     }));
 }
 
-export const saveQuestion = (question, authedUser, users, questions) => {
-    return _saveQuestion(question, authedUser, users, questions);
+export const saveQuestion = (question, authedUser) => {
+    return _saveQuestion(question, authedUser);
 }
 
 export const saveQuestionAnswer = (answerInfo, users, questions) => {

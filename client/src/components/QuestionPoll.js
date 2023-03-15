@@ -72,13 +72,13 @@ class QuestionPoll extends Component {
                                             <ul className='options'>
                                                 <li>
                                                     <label>
-                                                        <input type="radio" value="optionOne" name={this.props.questionInfo.authedUser} />
+                                                        <input type="radio" value="optionOne" name={this.props.questionInfo.authedUser.id} />
                                                         <span> {question.optionOne.text}</span>
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label>
-                                                        <input type="radio" value="optionTwo" name={this.props.questionInfo.authedUser} />
+                                                        <input type="radio" value="optionTwo" name={this.props.questionInfo.authedUser.id} />
                                                         <span> {question.optionTwo.text}</span>
                                                     </label>
                                                 </li>

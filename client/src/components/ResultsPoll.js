@@ -10,14 +10,15 @@ import Container from 'react-bootstrap/Container';
 import { WouldYou } from '../helpers/viewHelper';
 
 /**
-* Get answer rate for th curernt question
-* @param {object} optionVotes - option (one or two) votes
-* @param {number} allVotes - number of all votes
-* @param {string} userId - userId
-* @returns {object} returns object with percentage and text for option
-*/
-function getVotesPercentageInfo(optionVotes, allVotes, userId) {
-    const authedUserVote = optionVotes.filter(vote => vote === userId).length;
+ * Get answer rate for th curernt question
+ * @param {object} optionVotes - option (one or two) votes
+ * @param {number} allVotes - number of all votes
+ * @param authedUser
+ * @param {string} userId - userId
+ * @returns {object} returns object with percentage and text for option
+ */
+function getVotesPercentageInfo(optionVotes, allVotes, authedUser) {
+    const authedUserVote = optionVotes.filter(vote => vote === authedUser.id).length;
     const currentVotes = optionVotes.length;
 
     return {

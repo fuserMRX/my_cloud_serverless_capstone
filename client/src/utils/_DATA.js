@@ -147,11 +147,6 @@ export const _getUsers = async () => {
         const { data } = response || {};
         const { users: responseUsers } = data || [];
 
-        responseUsers && responseUsers.forEach((responseUser) => {
-            responseUser.answers = JSON.parse(responseUser.answers);
-            responseUser.questions = JSON.parse(responseUser.questions);
-        });
-
         console.log('Users:', responseUsers);
         users = responseUsers;
     } catch (e) {
@@ -178,11 +173,6 @@ export const _getQuestions = async() => {
 
         const { data } = response || {};
         const { questions: responseQuesitons } = data || [];
-
-        responseQuesitons && responseQuesitons.forEach((responseQuestion) => {
-            responseQuestion.optionOne = JSON.parse(responseQuestion.optionOne);
-            responseQuestion.optionTwo = JSON.parse(responseQuestion.optionTwo);
-        });
 
         console.log('Questions:', responseQuesitons);
         questions = responseQuesitons;
@@ -257,66 +247,38 @@ export const _createUser = (user) => {
     })
 }
 
-export const _saveQuestion = async (question, authedUser, users, questions) => {
+export const _saveQuestion = async (question, authedUser) => {
     const auth = new Auth();
     const idToken = auth.getIdToken();
 
-    let user = users[authedUser];
-    if (!user) {
-        user = createUserOrigin(authedUser);
-    }
-
     const formattedQuestion = formatQuestion(question);
 
-    user.questions = user.questions.concat([formattedQuestion.id]);
-
-    let questionResponse = null;
-    let userResponse = null;
+    authedUser.questions = authedUser.questions.concat([formattedQuestion.id]);
 
     try {
-        userResponse = await Axios.put(`${apiEndpoint}/users/${authedUser}`, JSON.stringify(user), {
+        await Axios.put(`${apiEndpoint}/users`, JSON.stringify(authedUser), {
             headers: {
-                'Content-Type': 'application/json',
+                // add 'text/plain' because 'applicaiton/json' does not work correctly with nested json for lambda functions
+                'Content-Type': 'text/plain',
                 'Authorization': `Bearer ${idToken}`
             }
-        })
+        });
     } catch (e) {
-        console.log(e);
+        console.log(`Issue with saving question for user ==>${e}`);
     }
 
     try {
-        questionResponse = await Axios.post(`${apiEndpoint}/questions`, JSON.stringify(formattedQuestion), {
+        await Axios.post(`${apiEndpoint}/questions`, JSON.stringify(formattedQuestion), {
             headers: {
-                'Content-Type': 'application/json',
+                // add 'text/plain' because 'applicaiton/json' does not work correctly with nested json for lambda functions
+                'Content-Type': 'text/plain',
                 'Authorization': `Bearer ${idToken}`
             }
-        })
+        });
     } catch (e) {
-        console.log(e);
+        console.log(`Issue with saving question istelf ==>${e}`);
     }
 
-    const responseQuestions = questionResponse && questionResponse.data.item;
-    const responseUsers = userResponse && userResponse.data.item;
-
-
-    //  TODO - delete this part after dealing with backend
-    questions = {
-        ...questions,
-        [formattedQuestion.id]: formattedQuestion
-    }
-
-    users = {
-        ...users,
-        [authedUser]: {
-            ...users[authedUser],
-            questions: users[authedUser].questions.concat([formattedQuestion.id])
-        }
-    }
-
-    // res(formattedQuestion)
-    // }, 1000)
-
-    // return data;
     return formattedQuestion;
 }
 
