@@ -5,6 +5,7 @@ import {
     _saveQuestionAnswer,
     _createUser,
     _getAuthorizedUserInfo,
+    _removeQuestion,
 } from './_DATA.js';
 
 export const getInitialData = () => {
@@ -21,6 +22,10 @@ export const getInitialData = () => {
 
 export const saveQuestion = (question, authedUser) => {
     return _saveQuestion(question, authedUser);
+}
+
+export const removeQuestion = async (qid, authedUser) => {
+    return await _removeQuestion(qid, authedUser);
 }
 
 export const saveQuestionAnswer = (answerInfo, questions) => {

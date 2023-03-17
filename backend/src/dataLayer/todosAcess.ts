@@ -8,8 +8,6 @@ import { TodoUpdate } from '../models/TodoUpdate';
 const XAWS = AWSXRay.captureAWS(AWS);
 
 const logger = createLogger('WouldYouRatherAccess');
-
-// TODO: Implement the dataLayer logic - done
 export class TodosAccess {
 
     constructor(
@@ -113,6 +111,34 @@ export class TodosAccess {
 
         return updateQuestionItem;
     }
+
+    async updateUserInfo({ userId, updateUserItem }) {
+        logger.info('updateUserItem ==========>', JSON.stringify(updateUserItem));
+        logger.info('userId ==========>', userId);
+        const { answers, questions, name } = updateUserItem;
+        await this.docClient.update({
+            TableName: this.usersTable,
+            Key: { id: userId, name },
+            ExpressionAttributeNames: { '#N': 'answers' },
+            UpdateExpression: 'set #N = :answers, questions = :questions',
+            ExpressionAttributeValues: {
+                ':answers': answers,
+                ':questions': questions
+            },
+        }).promise();
+
+        return updateUserItem;
+    }
+
+    async deleteQuestion({ userId, qid }) {
+        const deletedQuestion = await this.docClient.delete({
+            TableName: this.questionsTable,
+            Key: { id: qid, author: userId }
+        }).promise();
+
+        return { Deleted: deletedQuestion, qid };
+    }
+
 
     async createTodo(todoItem: TodoItem): Promise<TodoItem> {
         logger.info('CreateTodo Item', JSON.stringify(todoItem));

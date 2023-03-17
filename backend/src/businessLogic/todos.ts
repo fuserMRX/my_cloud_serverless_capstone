@@ -30,6 +30,14 @@ export async function updateQuestion(updateQuestionRequest) {
     return await todoAccess.updateQuestion(updateQuestionRequest);
 };
 
+export async function updateUserInfo(updateUserRequest) {
+    return await todoAccess.updateUserInfo(updateUserRequest);
+};
+
+export async function deleteQuestion(deleteQuestionRequest) {
+    return await todoAccess.deleteQuestion(deleteQuestionRequest);
+};
+
 export async function createTodo(
     createTodoRequest: CreateTodoRequest,
     userId: string

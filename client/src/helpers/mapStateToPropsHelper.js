@@ -15,7 +15,8 @@ export const mapStateToProps = (viewParam) => {
                 [user.id]: {
                     ...userNames[user.id],
                     name: user.name,
-                    avatarURL: user.avatarURL
+                    avatarURL: user.avatarURL,
+                    isAuthedUser: user.id === authedUser.id
                 },
             };
         });

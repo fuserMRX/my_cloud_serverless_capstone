@@ -166,7 +166,6 @@ functions:
           - xray:PutTraceSegments
         Resource: "*"
 
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
   UpdateQuestion:
     handler: src/lambda/http/updateQuestion.handler
     events:
@@ -191,25 +190,48 @@ functions:
           - xray:PutTraceSegments
         Resource: "*"
 
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements
-  # DeleteTodo:
-  #   handler: src/lambda/http/deleteTodo.handler
-  #   events:
-  #     - http:
-  #         method: delete
-  #         path: todos/{todoId}
-  #         cors: true
-  #         authorizer: Auth
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - dynamodb:DeleteItem
-  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REACT_WOULD_TABLE}
-  #     - Effect: Allow
-  #       Action:
-  #         - xray:PutTelemetryRecords
-  #         - xray:PutTraceSegments
-  #       Resource: "*"
+  UpdateUserInfo:
+    handler: src/lambda/http/updateUserInfo.handler
+    events:
+      - http:
+          method: patch
+          path: users/{userId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}
+      # should be added too in order to avoid "no identity-based policy" error for LocalSecondaryIndexes
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}/index/*
+      - Effect: Allow
+        Action:
+          - xray:PutTelemetryRecords
+          - xray:PutTraceSegments
+        Resource: "*"
+
+  DeleteQuestion:
+    handler: src/lambda/http/deleteQuestion.handler
+    events:
+      - http:
+          method: delete
+          path: questions/{qid}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QUESTIONS_TABLE}
+      - Effect: Allow
+        Action:
+          - xray:PutTelemetryRecords
+          - xray:PutTraceSegments
+        Resource: "*"
 
   # Provide property for setting up CORS, Authorizer, iamRoleStatements
   # GenerateUploadUrl:

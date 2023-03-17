@@ -317,3 +317,41 @@ export const _saveQuestionAnswer = async (answerInfo, questions) => {
 
     return  { authedUser };
 }
+
+export const _removeQuestion = async (questionId, authedUser) => {
+    const auth = new Auth();
+    const idToken = auth.getIdToken();
+
+    if (questionId in authedUser.answers) {
+        delete authedUser.answers[questionId];
+    }
+
+    if (authedUser.questions.includes(questionId)) {
+        const index = authedUser.questions.indexOf(questionId);
+        authedUser.questions.splice(index, 1);
+    }
+
+    try {
+        await Axios.delete(`${apiEndpoint}/questions/${questionId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+
+    try {
+        await Axios.patch(`${apiEndpoint}/users/${encodeURI(authedUser.id)}`, JSON.stringify(authedUser), {
+            headers: {
+                'Content-Type': 'text/plain',
+                'Authorization': `Bearer ${idToken}`
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+
+    return { updatedAuthedUser: authedUser };
+}

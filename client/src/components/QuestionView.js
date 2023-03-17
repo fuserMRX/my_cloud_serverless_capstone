@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
 
 /**
 * QuestionView
@@ -11,7 +12,10 @@ import Button from 'react-bootstrap/Button';
 * @returns {object} DOM element
 */
 const QuestionView = (props) => {
-    const viewPoll = 'viewPoll';
+    const viewPoll = 'View Poll';
+    const deleteQuestion = 'Delete Poll';
+    const answered = 'Answered';
+    const unanswered = 'Unanswered';
 
     // Use react hook useHistory to move to another route
     const history = useHistory();
@@ -27,15 +31,22 @@ const QuestionView = (props) => {
                 bg="light"
                 border="light"
             >
-                <Card.Img className="circle" src={props.questionOwnerData.avatarURL} alt={props.questionOwnerData.name}/>
+                <Card.Img className="circle" src={props.questionOwnerData.avatarURL} alt={props.questionOwnerData.name} />
                 <Card.Body>
                     <Card.Header><b>{props.questionOwnerData.name} asks:</b></Card.Header>
                     <Card.Title></Card.Title>
                     <Card.Text>
-                    ...{props.question.optionOne.text || props.question.optionTwo.text || ''}...
+                        ...{props.question.optionOne.text || props.question.optionTwo.text || ''}...
                     </Card.Text>
-                    <Button variant="outline-success" onClick={handleViewPoll}>{viewPoll}</Button>
+                    <Button variant="outline-success" onClick={handleViewPoll} size="lg" block>{viewPoll}</Button>
+                    {props.questionOwnerData.isAuthedUser ?
+                        <Button variant="outline-danger" onClick={() => props.deleteQuesiton(props.question.id)} size="lg" block>{deleteQuestion}</Button> :
+                        null}
+                    {props.isAnswered ?
+                        <Card.Footer className="text-muted"><Badge pill variant="success"> {answered} </Badge></Card.Footer> :
+                        <Card.Footer className="text-muted"><Badge pill variant="light"> {unanswered} </Badge></Card.Footer>}
                 </Card.Body>
+
             </Card>
         </>
     );

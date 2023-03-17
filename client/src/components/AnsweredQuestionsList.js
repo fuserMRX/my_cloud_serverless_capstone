@@ -14,6 +14,8 @@ const AnsweredQuestionsList = (props) => {
                     question={answeredQuestion}
                     questionOwnerData={props.userNames[answeredQuestion.author]}
                     dispatch={props.dispatch}
+                    deleteQuesiton={props.deleteQuesiton}
+                    isAnswered={true}
                 />
             ))}
         </div>

@@ -15,6 +15,7 @@ const UnansweredQuestionsList = (props) => {
                     question={unansweredQuestion}
                     questionOwnerData={props.userNames[unansweredQuestion.author]}
                     dispatch={props.dispatch}
+                    deleteQuesiton={props.deleteQuesiton}
                 />
             ))}
         </div>
