@@ -2,7 +2,6 @@ import { showLoading, hideLoading } from 'react-redux-loading';
 
 // Local Import
 import { saveQuestion, removeQuestion } from '../utils/api';
-import { setAuthedUser } from '../actions/authedUser';
 
 export const RECEIVE_QUESTIONS = 'RECEIVE_QUESTIONS';
 export const SAVE_QUESTION = 'SAVE_QUESTION';
@@ -37,12 +36,11 @@ export const handleSaveQuestion = (question) => {
 
 export const handleQuestionRemoval = (qid) => {
     return async (dispatch, getState) => {
-        const { authedUser } = getState();
+        const { authedUser, questions } = getState();
 
         dispatch(showLoading());
 
-        const { updatedAuthedUser } = await removeQuestion(qid, authedUser);
-        dispatch(setAuthedUser(updatedAuthedUser));
+        await removeQuestion(qid, authedUser, questions);
         dispatch(hideLoading());
     };
 };

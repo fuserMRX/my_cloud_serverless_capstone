@@ -32,6 +32,8 @@ export const mapStateToProps = (viewParam) => {
                 if (!(question.id in answers)) {
                     return question;
                 }
+
+                return null;
             }).sort((a, b) => b.timestamp - a.timestamp);
         }
 
@@ -40,6 +42,8 @@ export const mapStateToProps = (viewParam) => {
                 if (question.id in answers) {
                     return question;
                 }
+
+                return null;
             }).sort((a, b) => b.timestamp - a.timestamp);
         }
 

@@ -2,127 +2,127 @@ import Auth from '../auth/Auth';
 import Axios from 'axios';
 import { apiEndpoint } from '../config';
 
-let users = {
-    user1: {
-        id: 'user1',
-        name: 'First User',
-        avatarURL: '/assets/images/sarah.png',
-        email: 'sfgdfhdfhdfhdfh.com',
-        answers: {
-            "8xf0y6ziyjabvozdd253nd": 'optionOne',
-            "6ni6ok3ym7mf1p33lnez": 'optionTwo',
-            "am8ehyc8byjqgar0jgpub9": 'optionTwo',
-            "loxhs1bqm25b708cmbf3g": 'optionTwo'
-        },
-        questions: ['8xf0y6ziyjabvozdd253nd', 'am8ehyc8byjqgar0jgpub9']
-    },
+// let users = {
+//     user1: {
+//         id: 'user1',
+//         name: 'First User',
+//         avatarURL: '/assets/images/sarah.png',
+//         email: 'sfgdfhdfhdfhdfh.com',
+//         answers: {
+//             "8xf0y6ziyjabvozdd253nd": 'optionOne',
+//             "6ni6ok3ym7mf1p33lnez": 'optionTwo',
+//             "am8ehyc8byjqgar0jgpub9": 'optionTwo',
+//             "loxhs1bqm25b708cmbf3g": 'optionTwo'
+//         },
+//         questions: ['8xf0y6ziyjabvozdd253nd', 'am8ehyc8byjqgar0jgpub9']
+//     },
 
-    user2: {
-        id: 'user2',
-        name: 'Second User',
-        avatarURL: '/assets/images/tyler.png',
-        email: 'sfgdfhdfhdfhdfh.com',
-        answers: {
-            "vthrdm985a262al8qx3do": 'optionOne',
-            "xj352vofupe1dqz9emx13r": 'optionTwo',
-        },
-        questions: ['6ni6ok3ym7mf1p33lnez', 'xj352vofupe1dqz9emx13r'],
-    },
+//     user2: {
+//         id: 'user2',
+//         name: 'Second User',
+//         avatarURL: '/assets/images/tyler.png',
+//         email: 'sfgdfhdfhdfhdfh.com',
+//         answers: {
+//             "vthrdm985a262al8qx3do": 'optionOne',
+//             "xj352vofupe1dqz9emx13r": 'optionTwo',
+//         },
+//         questions: ['6ni6ok3ym7mf1p33lnez', 'xj352vofupe1dqz9emx13r'],
+//     },
 
-    user3: {
-        id: 'user3',
-        name: 'Third User',
-        avatarURL: '/assets/images/john.png',
-        email: 'sfgdfhdfhdfhdfh.com',
-        answers: {
-            "xj352vofupe1dqz9emx13r": 'optionOne',
-            "vthrdm985a262al8qx3do": 'optionTwo',
-            "6ni6ok3ym7mf1p33lnez": 'optionTwo'
-        },
-        questions: ['loxhs1bqm25b708cmbf3g', 'vthrdm985a262al8qx3do'],
-    },
-};
+//     user3: {
+//         id: 'user3',
+//         name: 'Third User',
+//         avatarURL: '/assets/images/john.png',
+//         email: 'sfgdfhdfhdfhdfh.com',
+//         answers: {
+//             "xj352vofupe1dqz9emx13r": 'optionOne',
+//             "vthrdm985a262al8qx3do": 'optionTwo',
+//             "6ni6ok3ym7mf1p33lnez": 'optionTwo'
+//         },
+//         questions: ['loxhs1bqm25b708cmbf3g', 'vthrdm985a262al8qx3do'],
+//     },
+// };
 
-let questions = {
-    "8xf0y6ziyjabvozdd253nd": {
-        id: '8xf0y6ziyjabvozdd253nd',
-        author: 'user1',
-        timestamp: 1467166872634,
-        optionOne: {
-            votes: ['user1'],
-            text: 'have horrible short term memory',
-        },
-        optionTwo: {
-            votes: [],
-            text: 'have horrible long term memory'
-        },
-    },
-    "6ni6ok3ym7mf1p33lnez": {
-        id: '6ni6ok3ym7mf1p33lnez',
-        author: 'user2',
-        timestamp: 1468479767190,
-        optionOne: {
-            votes: [],
-            text: 'become a superhero',
-        },
-        optionTwo: {
-            votes: ['user2', 'user1'],
-            text: 'become a supervillain'
-        }
-    },
-    "am8ehyc8byjqgar0jgpub9": {
-        id: 'am8ehyc8byjqgar0jgpub9',
-        author: 'user1',
-        timestamp: 1488579767190,
-        optionOne: {
-            votes: [],
-            text: 'be telekinetic',
-        },
-        optionTwo: {
-            votes: ['user1'],
-            text: 'be telepathic'
-        }
-    },
-    "loxhs1bqm25b708cmbf3g": {
-        id: 'loxhs1bqm25b708cmbf3g',
-        author: 'user3',
-        timestamp: 1482579767190,
-        optionOne: {
-            votes: [],
-            text: 'be a front-end developer',
-        },
-        optionTwo: {
-            votes: ['user1'],
-            text: 'be a back-end developer'
-        }
-    },
-    "vthrdm985a262al8qx3do": {
-        id: 'vthrdm985a262al8qx3do',
-        author: 'user3',
-        timestamp: 1489579767190,
-        optionOne: {
-            votes: ['user3'],
-            text: 'find $50 yourself',
-        },
-        optionTwo: {
-            votes: ['user2'],
-            text: 'have your best friend find $500'
-        }
-    },
-    "xj352vofupe1dqz9emx13r": {
-        id: 'xj352vofupe1dqz9emx13r',
-        author: 'user2',
-        timestamp: 1493579767190,
-        optionOne: {
-            votes: ['user2'],
-            text: 'write JavaScript',
-        },
-        optionTwo: {
-            votes: ['user3'],
-            text: 'write Swift'
-        }
-    },
-}
+// let questions = {
+//     "8xf0y6ziyjabvozdd253nd": {
+//         id: '8xf0y6ziyjabvozdd253nd',
+//         author: 'user1',
+//         timestamp: 1467166872634,
+//         optionOne: {
+//             votes: ['user1'],
+//             text: 'have horrible short term memory',
+//         },
+//         optionTwo: {
+//             votes: [],
+//             text: 'have horrible long term memory'
+//         },
+//     },
+//     "6ni6ok3ym7mf1p33lnez": {
+//         id: '6ni6ok3ym7mf1p33lnez',
+//         author: 'user2',
+//         timestamp: 1468479767190,
+//         optionOne: {
+//             votes: [],
+//             text: 'become a superhero',
+//         },
+//         optionTwo: {
+//             votes: ['user2', 'user1'],
+//             text: 'become a supervillain'
+//         }
+//     },
+//     "am8ehyc8byjqgar0jgpub9": {
+//         id: 'am8ehyc8byjqgar0jgpub9',
+//         author: 'user1',
+//         timestamp: 1488579767190,
+//         optionOne: {
+//             votes: [],
+//             text: 'be telekinetic',
+//         },
+//         optionTwo: {
+//             votes: ['user1'],
+//             text: 'be telepathic'
+//         }
+//     },
+//     "loxhs1bqm25b708cmbf3g": {
+//         id: 'loxhs1bqm25b708cmbf3g',
+//         author: 'user3',
+//         timestamp: 1482579767190,
+//         optionOne: {
+//             votes: [],
+//             text: 'be a front-end developer',
+//         },
+//         optionTwo: {
+//             votes: ['user1'],
+//             text: 'be a back-end developer'
+//         }
+//     },
+//     "vthrdm985a262al8qx3do": {
+//         id: 'vthrdm985a262al8qx3do',
+//         author: 'user3',
+//         timestamp: 1489579767190,
+//         optionOne: {
+//             votes: ['user3'],
+//             text: 'find $50 yourself',
+//         },
+//         optionTwo: {
+//             votes: ['user2'],
+//             text: 'have your best friend find $500'
+//         }
+//     },
+//     "xj352vofupe1dqz9emx13r": {
+//         id: 'xj352vofupe1dqz9emx13r',
+//         author: 'user2',
+//         timestamp: 1493579767190,
+//         optionOne: {
+//             votes: ['user2'],
+//             text: 'write JavaScript',
+//         },
+//         optionTwo: {
+//             votes: ['user3'],
+//             text: 'write Swift'
+//         }
+//     },
+// }
 
 function generateUID() {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
@@ -155,7 +155,7 @@ export const _getUsers = async () => {
     return users;
 }
 
-export const _getQuestions = async() => {
+export const _getQuestions = async () => {
     const auth = new Auth();
     const idToken = auth.getIdToken();
 
@@ -185,7 +185,7 @@ export const _getQuestions = async() => {
 export const _getAuthorizedUserInfo = async () => {
     const auth = new Auth();
     const idToken = auth.getIdToken();
-    
+
     console.log('Fetching user Info');
     let userInfo = {};
 
@@ -223,27 +223,6 @@ function formatQuestion({ optionOneText, optionTwoText, author }) {
             text: optionTwoText,
         }
     }
-}
-
-export const _createUser = (user) => {
-    return new Promise((res, rej) => {
-
-        setTimeout(() => {
-            users = {
-                ...users,
-                [user.userId]: {
-                    id: user.userId,
-                    name: user.userName,
-                    avatarURL: '/assets/images/no-name.png',
-                    email: user.email,
-                    answers: {},
-                    questions: []
-                }
-            }
-
-            res()
-        }, 1000)
-    })
 }
 
 export const _saveQuestion = async (question, authedUser) => {
@@ -315,12 +294,13 @@ export const _saveQuestionAnswer = async (answerInfo, questions) => {
         }
     }
 
-    return  { authedUser };
+    return { authedUser };
 }
 
-export const _removeQuestion = async (questionId, authedUser) => {
+export const _removeQuestion = async (questionId, authedUser, questions) => {
     const auth = new Auth();
     const idToken = auth.getIdToken();
+    let removedQuestionIndex = null;
 
     if (questionId in authedUser.answers) {
         delete authedUser.answers[questionId];
@@ -329,6 +309,17 @@ export const _removeQuestion = async (questionId, authedUser) => {
     if (authedUser.questions.includes(questionId)) {
         const index = authedUser.questions.indexOf(questionId);
         authedUser.questions.splice(index, 1);
+    }
+
+    for (const property in questions) {
+        const question = questions[property];
+        if (question.id === questionId) {
+            delete questions[property];
+        }
+    }
+
+    if (removedQuestionIndex !== null) {
+        delete questions[removedQuestionIndex];
     }
 
     try {

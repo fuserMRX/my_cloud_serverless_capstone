@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Spinner from 'react-bootstrap/Spinner';
-import { useHistory } from 'react-router-dom';
 
 // Local Import
 import UnansweredQuestionsList from './UnansweredQuestionsList';
@@ -16,7 +15,6 @@ const Home = () => {
     const [key, setKey] = useState('unquesitons');
     const [spinnerKey, setSpinnerKey] = useState(true);
     const dispatch = useDispatch();
-    const history = useHistory();
 
     useEffect(() => {
         // TODO - should be added on the App.js page in not to loose the result of the react-redux state
@@ -28,7 +26,6 @@ const Home = () => {
 
     const deleteQuesiton = async (qid) => {
         await dispatch(handleQuestionRemoval(qid));
-        history.push('/');
     };
 
     return (
