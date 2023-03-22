@@ -14,8 +14,8 @@
 *`serverless-express` library **[SERVERLESS-EXPRESS](https://www.npmjs.com/package/@vendia/serverless-express)** ✨ was used  instead of `middy` in order to simplify development process and use node.js express endpoints
 *`nodejs version` = **v16.18.1**
 
-### Installation insturctions for the front-end:
+### Installation insturctions for the front-end
 
 - **yarn install**
-- `node version` should no be more than **v16.18.1**
+- `node version` should not be more than **v16.18.1**
 - **npm run watch**
