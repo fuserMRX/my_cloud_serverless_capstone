@@ -6,7 +6,7 @@
 */
 export const mapStateToPropsQuestionPollHelper = ({ users, questions, authedUser }, props) => {
     const { question_id } = props.match.params;
-    const authedUserAnswersIds = (authedUser.answers) || {};
+    const { answers } = authedUser || {};
 
     // Get current question info
     const currentQuestion = Object.values(questions).filter( question => question.id === question_id)[0] || {};
@@ -24,7 +24,7 @@ export const mapStateToPropsQuestionPollHelper = ({ users, questions, authedUser
     };
 
     // Check if authed user has the particular question answered
-    if (question_id in authedUserAnswersIds) {
+    if (answers && (question_id in answers)) {
         pollInformation.isQuestionAnswered = true;
     }
 

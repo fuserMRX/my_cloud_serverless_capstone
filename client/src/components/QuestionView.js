@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
+import Image from 'react-bootstrap/Image';
 
 /**
 * QuestionView
@@ -31,7 +32,8 @@ const QuestionView = (props) => {
                 bg="light"
                 border="light"
             >
-                <Card.Img className="circle" src={props.questionOwnerData.avatarURL} alt={props.questionOwnerData.name} />
+                <Image className="circle userLogoImage" src={props.questionOwnerData.avatarURL} rounded/>
+
                 <Card.Body>
                     <Card.Header><b>{props.questionOwnerData.name} asks:</b></Card.Header>
                     <Card.Title></Card.Title>

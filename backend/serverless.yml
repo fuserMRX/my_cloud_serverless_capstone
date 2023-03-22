@@ -19,7 +19,7 @@ provider:
     apiGateway: true
 
   environment:
-    USERS_TABLE: Users-${self:provider.stage}
+    USERS_TABLE: UsersUpdated-${self:provider.stage}
     QUESTIONS_TABLE: Questions-${self:provider.stage}
     REACT_CREATED_AT_INDEX: CreatedAtIndex
     ATTACHMENT_S3_BUCKET: serverless-react-would-images-vnovodid-${self:provider.stage}
@@ -84,7 +84,6 @@ functions:
           - xray:PutTraceSegments
         Resource: "*"
 
-  # Provide iamRoleStatements property for performing Actions on DynamoDB
   GetUserInfo:
     handler: src/lambda/http/getUserInfo.handler
     events:
@@ -109,9 +108,6 @@ functions:
           - xray:PutTraceSegments
         Resource: "*"
 
-  # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
-  # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
-  # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
   CreateUpdateUser:
     handler: src/lambda/http/createUpdateUser.handler
     events:
@@ -233,35 +229,32 @@ functions:
           - xray:PutTraceSegments
         Resource: "*"
 
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements
-  # GenerateUploadUrl:
-  #   handler: src/lambda/http/generateUploadUrl.handler
-  #   events:
-  #     - http:
-  #         method: post
-  #         path: todos/{todoId}/attachment
-  #         cors: true
-  #         authorizer: Auth
-  #   iamRoleStatements:
-  #         - Effect: Allow
-  #           Action:
-  #             - dynamodb:UpdateItem
-  #           Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REACT_WOULD_TABLE}
-  #         - Effect: Allow
-  #           Action:
-  #             - s3:PutObject
-  #             - s3:GetObject
-  #             - '*'
-  #           Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
-  #         - Effect: Allow
-  #           Action:
-  #             - xray:PutTelemetryRecords
-  #             - xray:PutTraceSegments
-  #           Resource: "*"
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: users/attachment/{userEmail}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+          - Effect: Allow
+            Action:
+              - dynamodb:UpdateItem
+            Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObject
+              - '*'
+            Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+          - Effect: Allow
+            Action:
+              - xray:PutTelemetryRecords
+              - xray:PutTraceSegments
+            Resource: "*"
 resources:
   Resources:
-    # Add necessary AWS resources. You will need at least the following AWS resources
-    # Feel free to change the names as you like.
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
       Properties:
@@ -280,21 +273,21 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: name
-            AttributeType: S
           - AttributeName: email
+            AttributeType: S
+          - AttributeName: name
             AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-          - AttributeName: name
+          - AttributeName: email
             KeyType: RANGE
         LocalSecondaryIndexes:
         - IndexName: ${self:provider.environment.REACT_CREATED_AT_INDEX}
           KeySchema:
             - AttributeName: id
               KeyType: HASH
-            - AttributeName: email
+            - AttributeName: name
               KeyType: RANGE
           Projection:
             ProjectionType: ALL # What attributes will be copied to an index

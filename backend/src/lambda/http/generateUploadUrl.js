@@ -6,21 +6,23 @@ const app = express();
 
 import { createLogger } from '../../utils/logger';
 import { getUserId } from '../utils';
-import { createAttachmentPresignedUrl } from '../../businessLogic/todos';
+import { createAttachmentPresignedUrl } from '../../businessLogic/wouldYouRatherLogic';
 
 const logger = createLogger('generateUploadUrl');
 
-app.post('/todos/:todoId/attachment', async (req, res) => {
+app.post('/users/attachment/:userEmail', async (req, res) => {
     const { event, context } = serverlessExpress.getCurrentInvoke();
 
-    logger.info(`generateUploadUrl event info => ${JSON.stringify(event)}`);
-    logger.info(`generateUploadUrl context info => ${JSON.stringify(context)}`);
+    logger.info(`generateUploadUrl for avatar event info => ${JSON.stringify(event)}`);
+    logger.info(`generateUploadUrl for avatar context info => ${JSON.stringify(context)}`);
 
-    const { todoId } = req.params;
+    const { userEmail } = req.params;
+    logger.info(`email ==> ${userEmail}`);
 
     const userId = getUserId(event);
+    logger.info(`userId ==> ${userId}`);
 
-    const uploadUrl = await createAttachmentPresignedUrl(userId, todoId);
+    const uploadUrl = await createAttachmentPresignedUrl(userId, userEmail);
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Credentials', true);

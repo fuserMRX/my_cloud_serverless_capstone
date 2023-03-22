@@ -18,19 +18,6 @@ const getAuthorizedUser = () => {
     }
 };
 
-const createUserOrigin = (user) => {
-    const { userId, userName, email } = user;
-    return {
-        id: userId,
-        name: userName,
-        avatarURL: '/assets/images/no-name.png',
-        email,
-        answers: {},
-        questions: []
-    };
-};
-
 module.exports = {
     getAuthorizedUser,
-    createUserOrigin,
 }

@@ -3,14 +3,13 @@ import 'source-map-support/register';
 const express = require('express');
 const serverlessExpress = require('@vendia/serverless-express');
 
-import { deleteQuestion } from '../../businessLogic/todos';
+import { deleteQuestion } from '../../businessLogic/wouldYouRatherLogic';
 import { getUserId } from '../utils';
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('deleteQuestion');
 
 const app = express();
-// app.use(express.json());
 
 app.delete('/questions/:qid', async (req, res) => {
     const { event } = serverlessExpress.getCurrentInvoke();

@@ -34,7 +34,13 @@ export const handleCreateUser = (userInfo) => {
         dispatch(showLoading());
         try {
             const { user } = getAuthorizedUser();
+            const { name } = user || {};
+
             const authedUser = userInfo || user;
+
+            if (name) {
+                authedUser.name = name;
+            }
 
             dispatch(setAuthedUser(authedUser));
             dispatch(hideLoading());

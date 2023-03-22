@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Image from 'react-bootstrap/Image';
 
 // Local Import
 import { WouldYou } from '../helpers/viewHelper';
@@ -47,7 +48,7 @@ class QuestionPoll extends Component {
         const asks = 'asks';
 
         if (!Object.keys(question).length) {
-            return <Redirect to='/404' />;
+            return <Redirect to='' />;
         }
 
         return (
@@ -63,7 +64,7 @@ class QuestionPoll extends Component {
                         <Container fluid="xs" className="containerResult">
                             <Row>
                                 <Col xs={4}>
-                                    <img className="questionPollImg circle" src={avatar} alt={questionerName} />
+                                    <Image className="questionPollImg circle" src={avatar} alt={questionerName} rounded />
                                 </Col>
                                 <Col xs={8} className="questionPollBorder">
                                     <form onSubmit={this.onSubmit}>

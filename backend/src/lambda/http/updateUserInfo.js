@@ -3,7 +3,7 @@ const serverlessExpress = require('@vendia/serverless-express');
 
 import 'source-map-support/register';
 import { createLogger } from '../../utils/logger';
-import { updateUserInfo } from '../../businessLogic/todos';
+import { updateUserInfo } from '../../businessLogic/wouldYouRatherLogic';
 import { getUserId } from '../utils';
 
 const app = express();

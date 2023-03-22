@@ -13,6 +13,7 @@ import LeaderBoard from './components/LeaderBoard';
 import Navigation from './components/Nav';
 import GenericNotFound from './components/GenericNotFound';
 import Callback from './components/Callback';
+import EditUserAvatar from './components/EditUserAvatar';
 
 class App extends React.Component {
     state = {
@@ -45,13 +46,20 @@ class App extends React.Component {
                 <div className='container'>
                     {(this.state.authenticated || this.props.auth.isAuthenticated()) ?
                         <>
-                            {this.props.enableLogin && <Navigation auth={this.props.auth}/>}
+                            {this.props.enableLogin && <Navigation auth={this.props.auth} />}
                             <Switch>
                                 <Route path='/' exact component={Home} />
                                 <Route path='/questions/:question_id' exact component={QuestionPollWrapper} />
+                                <Route
+                                    path="/users/:userEmail/edit"
+                                    exact
+                                    render={props => {
+                                        return <EditUserAvatar {...props} auth={this.props.auth} />;
+                                    }}
+                                />
                                 <Route path='/add' exact component={QuestionCreaterForm} />
                                 <Route path='/leaderboard' exact component={LeaderBoard} />
-                                <Route path='/404' component={GenericNotFound} />
+                                <Route path='/404' exact component={GenericNotFound} />
                                 <Route component={GenericNotFound} />
                             </Switch>
                         </> : <>

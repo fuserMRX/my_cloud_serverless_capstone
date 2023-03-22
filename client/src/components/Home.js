@@ -17,7 +17,6 @@ const Home = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // TODO - should be added on the App.js page in not to loose the result of the react-redux state
         (async function fetchInitialData() {
             await handleInitialData(dispatch);
             setSpinnerKey(false);

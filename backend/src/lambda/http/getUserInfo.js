@@ -5,7 +5,7 @@ const serverlessExpress = require('@vendia/serverless-express');
 const app = express();
 
 import { createLogger } from '../../utils/logger';
-import { getAuthorizedUserInfo } from '../../businessLogic/todos';
+import { getAuthorizedUserInfo } from '../../businessLogic/wouldYouRatherLogic';
 import { getUserId } from '../utils';
 
 const logger = createLogger('getUserInfo');

@@ -5,6 +5,8 @@ import {
     _saveQuestionAnswer,
     _getAuthorizedUserInfo,
     _removeQuestion,
+    _getUploadUrl,
+    _uploadFile,
 } from './_DATA.js';
 
 export const getInitialData = () => {
@@ -30,3 +32,11 @@ export const removeQuestion = async (qid, authedUser, questions) => {
 export const saveQuestionAnswer = (answerInfo, questions) => {
     return _saveQuestionAnswer(answerInfo, questions);
 }
+
+export const getUploadUrl = async (token, userEmail) => {
+    return await _getUploadUrl(token, userEmail);
+};
+
+export const uploadFile = async (uploadUrl, file) => {
+    return await _uploadFile(uploadUrl, file);
+};

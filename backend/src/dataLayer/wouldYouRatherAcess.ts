@@ -2,17 +2,14 @@ import * as AWS from 'aws-sdk';
 const AWSXRay = require('aws-xray-sdk');
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { createLogger } from '../utils/logger';
-import { TodoItem } from '../models/TodoItem';
-import { TodoUpdate } from '../models/TodoUpdate';
 
 const XAWS = AWSXRay.captureAWS(AWS);
 
 const logger = createLogger('WouldYouRatherAccess');
-export class TodosAccess {
+export class WouldYouRatherAccess {
 
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
-        private readonly todosTable = process.env.TODOS_TABLE,
         private readonly usersTable = process.env.USERS_TABLE,
         private readonly questionsTable = process.env.QUESTIONS_TABLE,
         private readonly bucket = process.env.ATTACHMENT_S3_BUCKET,
@@ -115,10 +112,10 @@ export class TodosAccess {
     async updateUserInfo({ userId, updateUserItem }) {
         logger.info('updateUserItem ==========>', JSON.stringify(updateUserItem));
         logger.info('userId ==========>', userId);
-        const { answers, questions, name } = updateUserItem;
+        const { answers, questions, email } = updateUserItem;
         await this.docClient.update({
             TableName: this.usersTable,
-            Key: { id: userId, name },
+            Key: { id: userId, email },
             ExpressionAttributeNames: { '#N': 'answers' },
             UpdateExpression: 'set #N = :answers, questions = :questions',
             ExpressionAttributeValues: {
@@ -139,56 +136,19 @@ export class TodosAccess {
         return { Deleted: deletedQuestion, qid };
     }
 
-
-    async createTodo(todoItem: TodoItem): Promise<TodoItem> {
-        logger.info('CreateTodo Item', JSON.stringify(todoItem));
-        await this.docClient.put({
-            TableName: this.todosTable,
-            Item: todoItem
-        }).promise();
-
-        return todoItem;
-    }
-
-    async deleteTodo(userId: string, todoId: string) {
-        const deleteTodo = await this.docClient.delete({
-            TableName: this.todosTable,
-            Key: { userId, todoId }
-        }).promise();
-
-        return { Deleted: deleteTodo, todoId };
-    }
-
-    async updateTodo(userId: string, todoId: string, updateTodoItem: TodoUpdate): Promise<TodoUpdate> {
-        const { name, dueDate, done } = updateTodoItem;
-        await this.docClient.update({
-            TableName: this.todosTable,
-            Key: { userId, todoId },
-            ExpressionAttributeNames: { '#N': 'name' },
-            UpdateExpression: 'set #N = :name, dueDate = :dueDate, done = :done',
-            ExpressionAttributeValues: {
-                ':name': name,
-                ':dueDate': dueDate,
-                ':done': done,
-            },
-        }).promise();
-
-        return updateTodoItem;
-    }
-
-    async generateUploadUrl(userId: string, todoId: string): Promise<string> {
+    async generateUploadUrl(userId, userEmail) {
         const uploadUrl = this.S3.getSignedUrl('putObject', {
             Bucket: this.bucket,
-            Key: todoId,
+            Key: userId,
             Expires: this.urlExp
         });
 
         await this.docClient.update({
-            TableName: this.todosTable,
-            Key: { userId, todoId },
-            UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+            TableName: this.usersTable,
+            Key: { id: userId, email: userEmail },
+            UpdateExpression: 'set avatarURL = :avatarURL',
             ExpressionAttributeValues: {
-                ":attachmentUrl": uploadUrl.split("?")[0]
+                ":avatarURL": uploadUrl.split("?")[0]
             },
             ReturnValues: 'UPDATED_NEW'
         }).promise();

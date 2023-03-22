@@ -18,7 +18,16 @@ class QuestionCreaterForm extends Component {
         optionOne: '',
         optionTwo: '',
         toHome: false,
-        validated: false
+        validated: false,
+        invalidData: false,
+    }
+
+    componentDidMount() {
+        if (!this.props.authedUser) {
+            this.setState(() => ({
+                invalidData: true,
+            }));
+        }
     }
 
     static propTypes = {
@@ -72,7 +81,7 @@ class QuestionCreaterForm extends Component {
         const validationFailure1 = 'Please enter option one';
         const validationFailure2 = 'Please enter option two';
 
-        if (this.state.toHome) {
+        if (this.state.toHome || this.state.invalidData) {
             return <Redirect to='' />;
         }
 
@@ -128,4 +137,10 @@ class QuestionCreaterForm extends Component {
     }
 }
 
-export default connect()(QuestionCreaterForm);
+const mapStateToProps = ({ authedUser }) => {
+    return {
+        authedUser
+    };
+};
+
+export default connect(mapStateToProps)(QuestionCreaterForm);

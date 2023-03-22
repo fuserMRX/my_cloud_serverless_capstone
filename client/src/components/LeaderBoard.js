@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
@@ -9,9 +10,22 @@ import Image from 'react-bootstrap/Image';
 import Badge from 'react-bootstrap/Badge';
 
 const LeaderBoard = (props) => {
+    const [isUserInfoPresent, checkUserInfo] = useState(true);
+
+    useEffect(() => {
+        if (!props.usersInfo.length) {
+            checkUserInfo(false);
+        }
+    }, [props.usersInfo.length]);
+
+    if(!isUserInfoPresent) {
+        return <Redirect to=''/>;
+    }
+
     const answeredQuestions = 'Answered questions';
     const createdQuestions = 'Created questions';
     const score = 'Score';
+
     return (
         <div>
             <ul className='options leaderBoardAll'>
@@ -25,7 +39,7 @@ const LeaderBoard = (props) => {
                                     triangle-topleft-image-${(index === 0) ? 'gold' : (index === 1) ? 'silver' : 'bronze' }`}>
                                     </div>
                                     <Col className="leaderBoardItemContainer text-center" xs md="4">
-                                        <Image className="circle leaderBoardImg" src={user.userPicture} alt={user.userName} />
+                                        <Image className="circle leaderBoardImg" src={user.userPicture} alt={user.userName} rounded />
                                     </Col>
                                     <Col className="leaderBoardItemContainer text-center leaderMiddle" md="auto">
                                         <p><b>{user.userName}</b></p>
@@ -54,14 +68,14 @@ const LeaderBoard = (props) => {
     );
 };
 
-const mapStateToProps = ({ users }) => {
+const mapStateToProps = ({ users, authedUser }) => {
     return {
         usersInfo: Object.values(users).map(({ id, name, avatarURL, answers, questions=[] }) => {
             const answeredQuestions = Object.keys(answers).length || 0;
             const createdQuestions = questions.length || 0;
             const score = answeredQuestions + createdQuestions;
             return {
-                userName: name,
+                userName: (id === authedUser.id) ? authedUser.name : name,
                 userPicture: avatarURL,
                 id,
                 answeredQuestions,

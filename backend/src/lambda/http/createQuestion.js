@@ -2,7 +2,7 @@ import 'source-map-support/register';
 
 import { createLogger } from '../../utils/logger';
 import { getUserId } from '../utils';
-import { createQuestion } from '../../businessLogic/todos';
+import { createQuestion } from '../../businessLogic/wouldYouRatherLogic';
 
 const express = require('express');
 const serverlessExpress = require('@vendia/serverless-express');
